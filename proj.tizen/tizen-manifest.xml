@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3" package="org.devil.LckyHorse" version="1.0.0">
+    <ui-application appid="org.devil.LckyHorse" exec="hellocpp" multiple="false" nodisplay="false" taskmanage="true" type="capp">
+        <label>LuckyHorse</label>
+        <icon>LuckyHorse.png</icon>
+    </ui-application>
+</manifest>
