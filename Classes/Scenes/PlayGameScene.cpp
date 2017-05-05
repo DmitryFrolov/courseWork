@@ -25,7 +25,7 @@ bool PlayGameScene::init()
 
 void PlayGameScene::initAllVariables() 
 {
-	srand(time(NULL));
+	srand(time(0));
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 	player1Score = 0;
@@ -43,10 +43,10 @@ void PlayGameScene::drawGameObjects()
 
 void PlayGameScene::drawBoard() 
 {
-	chessBoardObj = new ChessBoard(CELLS_AMOUNT);
-	chessBoardObj->create();
-	cells = *chessBoardObj->getCells();
-	LeftUpperBoardPoint = chessBoardObj->getLeftUpperBoardPoint();
+	chessBoard = new ChessBoard(CELLS_AMOUNT, CELL_MAX_WEIGHT);
+	chessBoard->create();
+	cells = *chessBoard->getCells();
+	LeftUpperBoardPoint = chessBoard->getLeftUpperBoardPoint();
 	
 	for (auto &row : cells)
 		for (auto &cell : row) {
@@ -96,33 +96,34 @@ void PlayGameScene::onMouseUp(Event *event)
 	}
 	else {
 		EventMouse* mEvent = (EventMouse*)event;
-		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && isPositionBelongsToBoard(Vec2(mEvent->getCursorX(), mEvent->getCursorY()))
-			&& playableFigure->horseReleased && playableFigure->targetCoordsIsValid(
-				chessBoardObj->ConvertVec2toVec2B(Vec2(mEvent->getCursorX(), mEvent->getCursorY())), playableFigure->horseOnBoard))
+		Vec2 cursorPosition = Vec2(mEvent->getCursorX(), mEvent->getCursorY());
+		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
+			&& playableFigure->horseReleased && playableFigure->isTargetCoordsValid(
+				chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
 		{ 
-			playableFigure->horseOnBoard = chessBoardObj->ConvertVec2toVec2B(Vec2(mEvent->getCursorX(), mEvent->getCursorY()));
+			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
 			playableFigure->horseReleased = false;
-			runMainGameSequence(playableFigure->getSprite(), getNearestCellCenterCoordinates(Vec2(mEvent->getCursorX(), mEvent->getCursorY())) );
+			runMainGameSequence(playableFigure->getSprite(), getNearestCellCenterCoordinates(cursorPosition) );
 		}
 	}
 }
 
 Vec2 PlayGameScene::getNearestCellCenterCoordinates(Vec2 coordinate)
 {
-	auto vec = chessBoardObj->ConvertVec2toVec2B(coordinate);
+	auto vec = chessBoard->ConvertVec2toVec2B(coordinate);
 	return cells.at(vec.x).at(vec.y)->centerCoordinate;
 }
-
 
 void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 {
 	auto acMoveTo = MoveTo::create(2, moveto);
 	auto releaseHorse = CallFunc::create([this]() { playableFigure->horseReleased = true; });
 	auto upgradeScore = CallFunc::create([this]() {
-		int scoreToAdd = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreWeight;
+		auto currentCell = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y);
+		int scoreToAdd = currentCell->scoreWeight;
 		if (scoreToAdd != 0) {
-			cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreWeight = 0;
-			cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreLabel->setString("0");
+			currentCell->scoreWeight = 0;
+			currentCell->scoreLabel->setString("0");
 			if (currentTurn == _PLAYER_1_TURN_) {
 				player1Score += scoreToAdd;
 				player1ScoreLabel->setString("Player 1 score: " + std::to_string(player1Score));
@@ -146,7 +147,7 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 	});
 
 	Sequence* sequence;
-	if (AI)
+	if (AI_ENABLED)
 		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, DelayTime::create(0.5),
 			aiTurn, DelayTime::create(2), upgradeScore, switchTurn, releaseHorse, nullptr);
 	else
@@ -158,10 +159,11 @@ void PlayGameScene::runMainGameSequence(Sprite *obj)//overload for ai vs ai debu
 { 
 	auto switchHorse = CallFunc::create([this]() {	playableFigure->horseReleased = !playableFigure->horseReleased; });
 	auto upgradeScore = CallFunc::create([this]() {
-		int scoreToAdd = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreWeight;
+		auto currnetCell = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y);
+		int scoreToAdd = currnetCell->scoreWeight;
 		if (scoreToAdd != 0) {
-			cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreWeight = 0;
-			cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y)->scoreLabel->setString("0");
+			currnetCell->scoreWeight = 0;
+			currnetCell->scoreLabel->setString("0");
 			if (currentTurn == _PLAYER_1_TURN_) {
 				player1Score += scoreToAdd;
 				player1ScoreLabel->setString("Player 1 score: " + std::to_string(player1Score));
@@ -191,12 +193,12 @@ void PlayGameScene::aiPlay()
 	playableFigure->horseReleased = false;
 	int num_of_available = 0, target_cell_id = 0;
 	std::vector<Cell> available_cells;
-	available_cells.reserve(8);	
+	available_cells.reserve(8);
 
 	for (auto &row : cells)
 		for (auto &cell : row)
 		{
-			if (cell->scoreWeight > 0 && playableFigure->targetCoordsIsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
+			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
 				available_cells.push_back(*cell);
 				num_of_available++;
 			}
@@ -205,34 +207,30 @@ void PlayGameScene::aiPlay()
 	if (num_of_available == 0) //if all available turns == 0 -> game is over
 		endGameScene();
 
-	int numOfNonZeroCellWeightFinded = 0;
-	{ 
-		int best_delta = -1000, current_delta, loop_worst_delta;
-		for (int ita = 0; ita < num_of_available; ++ita) {
-			loop_worst_delta = 1000;
-			for (auto &row : cells)
-				for (auto &cell : row)
-				{
-					if (playableFigure->targetCoordsIsValid(cell->coordinatesInTab, available_cells.at(ita).coordinatesInTab) && cell->coordinatesInTab != playableFigure->horseOnBoard)
-						if (available_cells.at(ita).scoreWeight != 0 && cell->scoreWeight != 0) {
-							numOfNonZeroCellWeightFinded++;
-							current_delta = available_cells.at(ita).scoreWeight - cell->scoreWeight;
-							if (current_delta < loop_worst_delta)
-								loop_worst_delta = current_delta;
-						}
-					if (loop_worst_delta > best_delta) {
-						target_cell_id = ita;
-						best_delta = loop_worst_delta;
+	for (int iteratorAvailable = 0, loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT;
+		iteratorAvailable < num_of_available; loop_worst_delta = CELL_MAX_WEIGHT, ++iteratorAvailable) 
+	{
+		for (auto &row : cells)																													//проход по вариантам противника
+			for (auto &cell : row)
+				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells.at(iteratorAvailable).coordinatesInTab)			//если может перейти фигура
+					&& cell->coordinatesInTab != playableFigure->horseOnBoard)																	//и таргет позиция != позиция коня
+					if (available_cells.at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {										//не прокладываем маршрут через нули
+						//точки, куда возможен переход с позиции available_cells.at(iteratorAvailable)	(куда может перейти противник)
+						//необходимо найти максимальный вес для каждой available_cells.at(iteratorAvailable)
+						int current_delta = available_cells.at(iteratorAvailable).scoreWeight - cell->scoreWeight;
+						if (current_delta < loop_worst_delta)
+							loop_worst_delta = current_delta;
 					}
-				}
+		if (loop_worst_delta > turn_worst_delta) {
+			target_cell_id = iteratorAvailable;
+			turn_worst_delta = loop_worst_delta;
 		}
-
-		playableFigure->horseOnBoard = available_cells.at(target_cell_id).coordinatesInTab;
-		auto acMoveTo = MoveTo::create(2, available_cells.at(target_cell_id).centerCoordinate);
-		playableFigure->getSprite()->runAction(acMoveTo);
-
-		//todo: add checking for available cells 4 user turn
 	}
+	playableFigure->horseOnBoard = available_cells.at(target_cell_id).coordinatesInTab;
+	auto acMoveTo = MoveTo::create(2, available_cells.at(target_cell_id).centerCoordinate);
+	playableFigure->getSprite()->runAction(acMoveTo);
+
+	//todo: add checking for available cells 4 user turn
 }
 
 void PlayGameScene::endGameScene()

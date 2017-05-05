@@ -1,6 +1,6 @@
 #include "Figure.h"
 
-Figure::Figure(Vec2 _initialPosition, Vec2 _initOnBoard)
+Figure::Figure(Vec2 _initialPosition, Vec2B _initOnBoard)
 {
 	figure = Sprite::create("horse.png");
 	figure->setPosition(_initialPosition);
@@ -20,9 +20,7 @@ Sprite* Figure::getSprite()
 	return figure;
 }
 
-
-//принимает координаты центра и координаты на доске
-bool Figure::targetCoordsIsValid(Vec2 targetCoordinate, Vec2 figurePositionOnBoard)
+bool Figure::isTargetCoordsValid(Vec2B targetCoordinate, Vec2B figurePositionOnBoard)
 {
 	const int dX = figurePositionOnBoard.x - targetCoordinate.x;
 	const int dY = figurePositionOnBoard.y - targetCoordinate.y;

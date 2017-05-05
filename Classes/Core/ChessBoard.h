@@ -11,12 +11,12 @@ typedef Vec2 Vec2B; //Vec2B - the structure describing coordinates on board
 */
 struct Cell 
 {
-	Vec2B coordinatesInTab;
-	Vec2 centerCoordinate;
-	DrawNode *cellNode;
-	Color4F color;
-	Label* scoreLabel;
-	int scoreWeight;
+	Vec2B		coordinatesInTab;
+	Vec2		centerCoordinate;
+	DrawNode*	cellNode;
+	Color4F		color;
+	Label*		scoreLabel;
+	int			scoreWeight;
 };
 
 class ChessBoard
@@ -28,6 +28,7 @@ private:
 	Vec2							LeftUpperBoardPoint;
 	float							BoardSideSize;
 	int								cellsAmount;
+	int								cellMaxWeight;
 	std::vector<std::vector<Cell*>> cells;
 
 	/*
@@ -54,7 +55,7 @@ public:
 	/*
 	*Calculates main variables, needed to build the chess board, allocates memory for cells
 	*/
-	ChessBoard(int cellsAmount);
+	ChessBoard(int cellsAmount, int cellMaxWeight);
 
 	/*
 	*releases the memory, allocated for cells
@@ -76,7 +77,7 @@ public:
 	*/
 	Vec2 getLeftUpperBoardPoint();
 
-	Vec2B ChessBoard::ConvertVec2toVec2B(Vec2 classic);
+	Vec2B ConvertVec2toVec2B(Vec2 classic);
 
 	/*
 	*ñhecks whether the point belongs to the board

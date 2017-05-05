@@ -320,3 +320,11 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/**
 # !tools/packages.config
+
+# PVS-Studio files
+*PVS-Studio*
+*.i
+
+# build + log
+*.tlog
+*.lastbuildstate

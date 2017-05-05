@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "MainMenuScene.h"
 #include <ui/CocosGUI.h>
-#include "Core\SettingsConfRW.h"
+#include "Core/SettingsConfRW.h"
 USING_NS_CC;
 using namespace ui;
 
@@ -15,7 +15,6 @@ using namespace ui;
 class SettingsScene : public cocos2d::Layer
 {
 private:
-	MenuItem							*backButton;
 	Slider							  *volumeSlider;
 	CheckBox							 *bgSoundCB;
 	Vector<MenuItem*>					  MenuItems;

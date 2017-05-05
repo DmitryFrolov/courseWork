@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 USING_NS_CC;
+typedef Vec2 Vec2B;
+
 class Figure
 { 
 private:
@@ -11,15 +13,14 @@ private:
 	Size visibleSize;
 
 public:
-	Figure(Vec2 _initialPosition, Vec2 _initOnBoard = Vec2(0, 0));
+	bool horseReleased;
+	Vec2 horseOnBoard;
+
+	Figure(Vec2 _initialPosition, Vec2B _initOnBoard = Vec2B(0, 0));
 	~Figure();
 
 	Sprite* getSprite();
-	bool targetCoordsIsValid(Vec2 targetCoordinate);
-	bool targetCoordsIsValid(Vec2 targetCoordinate, Vec2 figurePositionOnBoard);
-
-	bool horseReleased;
-	Vec2 horseOnBoard;
+	bool isTargetCoordsValid(Vec2B targetCoordinate, Vec2B figurePositionOnBoard);
 };
 
 #endif // !__FIGURE_H__

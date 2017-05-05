@@ -1,8 +1,9 @@
 #include "ChessBoard.h"
 
-ChessBoard::ChessBoard(int _cellsAmount)
+ChessBoard::ChessBoard(int _cellsAmount, int _cellMaxWeight)
 {
 	cellsAmount = _cellsAmount;
+	cellMaxWeight = _cellMaxWeight;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 	BoardSideSize = visibleSize.height * 8 / 9;
@@ -60,7 +61,7 @@ Label* ChessBoard::createScoreLabel(int score, Vec2 position)
 
 inline int ChessBoard::getRandomWeight() 
 {
-	return rand() % 99 + 1;
+	return rand() % cellMaxWeight + 1;
 }
 
 DrawNode* ChessBoard::createRect(Vec2 rectCenter, Color4F color, float sideSize)

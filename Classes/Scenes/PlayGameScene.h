@@ -6,10 +6,11 @@
 #include "Core\Figure.h"
 USING_NS_CC;
 
-#define AI_ONLY true
-#define CELLS_AMOUNT 8
-#define AI false
-#define CHESS_BACKROUND_IMAGE "backgrounds/chess-background.jpg"
+#define AI_ONLY					true
+#define CELLS_AMOUNT			8
+#define AI_ENABLED				true
+#define CELL_MAX_WEIGHT			99
+#define CHESS_BACKROUND_IMAGE	"backgrounds/chess-background.jpg"
 
 enum TurnState {_PLAYER_1_TURN_, _PLAYER_2_TURN_};
 
@@ -20,7 +21,7 @@ private:
 
 	Vec2 origin;
 	Size visibleSize;
-	ChessBoard* chessBoardObj;
+	ChessBoard* chessBoard;
 	std::vector<std::vector<Cell*>> cells;
 	Vec2 LeftUpperBoardPoint;
 	TurnState currentTurn;
@@ -28,7 +29,6 @@ private:
 	int player2Score;
 	Label* player1ScoreLabel;
 	Label* player2ScoreLabel;
-
 public:
 	CREATE_FUNC(PlayGameScene);
 	virtual bool init();
@@ -42,16 +42,13 @@ public:
 	void drawPlayerScoreLabels();
 
 	void onMouseUp(Event *event);
-	void runMainGameSequence(Sprite *obj, Vec2 moveto);  //todo: split on create & run sequence
-	void runMainGameSequence(Sprite *obj); //overload for ai vs ai
-	bool isPositionBelongsToBoard(Vec2 position);
+	void runMainGameSequence(Sprite *obj, Vec2 moveto); //todo: split on create & run sequence
+	void runMainGameSequence(Sprite *obj);				//overload for ai vs ai
 
 	//returns coordinates of the center of the nearest cell
 	Vec2 getNearestCellCenterCoordinates(Vec2 coordinate);
 	void aiPlay();
 	void endGameScene();
-
-	//Vec2B PlayGameScene::ConvertVec2toVec2B(Vec2 classic);
 };
 #endif // !_PLAY_SCENE_H_
 

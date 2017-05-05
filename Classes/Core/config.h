@@ -8,7 +8,7 @@
 static class dConf
 {
 public:
-	static std::string getValueByKey(std::string fname, std::string key)
+	static std::string getValueByKey(const std::string &fname, const std::string &key)
 	{
 		std::ifstream in(fname.c_str());
 		std::string s, f1, f2, f3;
@@ -25,12 +25,17 @@ public:
 		return s;
 	}
 
-	static void setValueByKey(std::string fname, std::string key, std::string newValue)
+	static void setValueByKey(const std::string &fname, const std::string &key, const std::string &newValue)
 		{
 		std::string f1, f2, f3;
 		std::ifstream ifs(fname.c_str());
 		std::vector<std::string> Vec;
-		while (!ifs.eof()) { std::string s; std::getline(ifs, s); Vec.push_back(s); } //copy file into string vector
+		while (!ifs.eof()) {  //copy file into string vector
+			std::string s; 
+			std::getline(ifs, s); 
+			Vec.push_back(s); 
+		}
+
 		for (std::vector<std::string>::iterator it = Vec.begin(); it != Vec.end(); ++it) { //edit string
 			std::istringstream iss(*it);
 			if (iss >> f1 >> f2 >> f3 && f1 == key) {
@@ -41,15 +46,14 @@ public:
 		ifs.close();
 		std::ofstream ofs(fname.c_str());
 		for (std::vector<std::string>::iterator it = Vec.begin(); it != Vec.end(); ++it) { //write vector to file								
-			if (*it == "")						//во избежание пустых строк при перезаписи //костыль?			
+			if (*it == "")						//if string is empty -> skip it			
 				continue;
 			ofs << *it << std::endl;
 		}
 		ofs.close();
 	}
 
-	//=================================someConvertors
-	static inline bool stringToBool(std::string const& s)//convert string to bool
+	static inline bool stringToBool(std::string const& s)
 	{
 		if (s == "0")
 			return false;
@@ -57,10 +61,10 @@ public:
 			return true;
 	}
 
-	static inline const char * const boolToString(bool b)//convert bool to string
+	static inline const char * const boolToString(bool b)
 	{
 		return b ? "1" : "0";
 	}
 
-}; //end namespace dConf
+};
 #endif _CONFIG_H_

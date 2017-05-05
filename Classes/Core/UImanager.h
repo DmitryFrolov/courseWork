@@ -10,7 +10,7 @@ USING_NS_CC;
 static class UImanager 
 {
 public:
-	static ui::LoadingBar* createLoadingBar(const Vec2 loadingBarPosition)
+	static ui::LoadingBar* createLoadingBar(const Vec2 &loadingBarPosition)
 	{
 		auto loadingBar = ui::LoadingBar::create("slider/slider-track-fill.png", 20);
 		loadingBar->setDirection(ui::LoadingBar::Direction::LEFT);
@@ -18,7 +18,7 @@ public:
 		return loadingBar;
 	}
 	
-	static cocos2d::Sprite* createBackground(	const std::string pathToImage,
+	static cocos2d::Sprite* createBackground(	const std::string &pathToImage,
 												const float scale)
 	{
 		auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -31,10 +31,10 @@ public:
 		return backgroundImage;
 	}
 
-	static cocos2d::MenuItemLabel* createButton(const std::string text, 
-												const cocos2d::Color4B textColor,
-												const cocos2d::ccMenuCallback callback, 
-												const Vec2 position)
+	static cocos2d::MenuItemLabel* createButton(const std::string &text, 
+												const cocos2d::Color4B &textColor,
+												const cocos2d::ccMenuCallback &callback, 
+												const Vec2 &position)
 	{
 		auto label = Label::createWithTTF(text, BUTTON_LABEL_FONT, BUTTON_LABEL_SIZE);
 		label->setTextColor(textColor);
@@ -46,7 +46,7 @@ public:
 	static cocos2d::Label* createTextLabel(	const char *text, 
 											const char *fontFilePath, 
 											const int fontSize, 
-											const Vec2 position)
+											const Vec2 &position)
 	{
 		Label *label = Label::createWithTTF(text, fontFilePath, fontSize);
 		label->setAnchorPoint(Vec2(0, 0.5));
@@ -54,7 +54,7 @@ public:
 		return label;
 	}
 
-	static cocos2d::ui::Slider* createSlider(	const Vec2 position, 
+	static cocos2d::ui::Slider* createSlider(	const Vec2 &position, 
 												const float scale = 1)
 	{
 		auto slider = cocos2d::ui::Slider::create();
@@ -68,7 +68,7 @@ public:
 		return slider;
 	}
 
-	static cocos2d::ui::CheckBox* createCheckBox(	const Vec2 position, 
+	static cocos2d::ui::CheckBox* createCheckBox(	const Vec2 &position, 
 													const float scale = 1)
 	{
 		auto checkBox = cocos2d::ui::CheckBox::create("CBdisabledYellow.png", "vote.png", cocos2d::ui::Widget::TextureResType::LOCAL);
