@@ -14,23 +14,20 @@ bool PlayGameScene::init()
 	{
 		return false;
 	}
+	player1Score = 0, player2Score = 0;
+	currentTurn = _PLAYER_1_TURN_;
 
-	initAllVariables();
 	drawGameObjects();
+
 	auto _mouseListener = EventListenerMouse::create();
 	_mouseListener->onMouseUp = CC_CALLBACK_1(PlayGameScene::onMouseUp, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(_mouseListener, this);
-	return true;
-}
+	
+	auto _kbListener = EventListenerKeyboard::create();
+	_kbListener->onKeyReleased = CC_CALLBACK_2(PlayGameScene::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(_kbListener, this);
 
-void PlayGameScene::initAllVariables() 
-{
-	srand(time(0));
-	visibleSize = Director::getInstance()->getVisibleSize();
-	origin = Director::getInstance()->getVisibleOrigin();
-	player1Score = 0;
-	player2Score = 0;
-	currentTurn = _PLAYER_1_TURN_;
+	return true;
 }
 
 void PlayGameScene::drawGameObjects() 
@@ -43,7 +40,7 @@ void PlayGameScene::drawGameObjects()
 
 void PlayGameScene::drawBoard() 
 {
-	chessBoard = new ChessBoard(CELLS_AMOUNT, CELL_MAX_WEIGHT);
+	chessBoard = new ChessBoard(CELLS_AMOUNT_IN_A_ROW, CELL_MAX_WEIGHT);
 	chessBoard->create();
 	cells = *chessBoard->getCells();
 	LeftUpperBoardPoint = chessBoard->getLeftUpperBoardPoint();
@@ -69,6 +66,9 @@ void PlayGameScene::drawFigure()
 
 void PlayGameScene::drawPlayerScoreLabels()
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+
 	player1ScoreLabel = Label::createWithTTF("Player 1 score: " + std::to_string(player1Score),
 		"fonts/Enchanted Land cyr-lat.ttf", 70);
 	player1ScoreLabel->setAnchorPoint(Vec2(0, 0.5));
@@ -97,9 +97,11 @@ void PlayGameScene::onMouseUp(Event *event)
 	else {
 		EventMouse* mEvent = (EventMouse*)event;
 		Vec2 cursorPosition = Vec2(mEvent->getCursorX(), mEvent->getCursorY());
+		Cell* targetCell = cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y);
+		
 		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
-			&& playableFigure->horseReleased && playableFigure->isTargetCoordsValid(
-				chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
+			&& playableFigure->horseReleased && targetCell->scoreWeight != 0 &&
+			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
 		{ 
 			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
 			playableFigure->horseReleased = false;
@@ -116,7 +118,7 @@ Vec2 PlayGameScene::getNearestCellCenterCoordinates(Vec2 coordinate)
 
 void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 {
-	auto acMoveTo = MoveTo::create(2, moveto);
+	auto acMoveTo = MoveTo::create(ANIMATION_LENGHT, moveto);
 	auto releaseHorse = CallFunc::create([this]() { playableFigure->horseReleased = true; });
 	auto upgradeScore = CallFunc::create([this]() {
 		auto currentCell = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y);
@@ -149,7 +151,7 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 	Sequence* sequence;
 	if (AI_ENABLED)
 		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, DelayTime::create(0.5),
-			aiTurn, DelayTime::create(2), upgradeScore, switchTurn, releaseHorse, nullptr);
+			aiTurn, DelayTime::create(ANIMATION_LENGHT), upgradeScore, switchTurn, releaseHorse, nullptr);
 	else
 		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, releaseHorse, nullptr);
 	obj->runAction(sequence);
@@ -184,13 +186,12 @@ void PlayGameScene::runMainGameSequence(Sprite *obj)//overload for ai vs ai debu
 	auto aiTurn = CallFunc::create([this]() {
 		aiPlay();
 	});
-	Sequence* sequence = Sequence::create(switchHorse, aiTurn, DelayTime::create(2), upgradeScore, switchTurn, switchHorse, nullptr);
+	Sequence* sequence = Sequence::create(switchHorse, aiTurn, DelayTime::create(ANIMATION_LENGHT), upgradeScore, switchTurn, switchHorse, nullptr);
 	obj->runAction(sequence);
 }
 
 void PlayGameScene::aiPlay()
 {
-	playableFigure->horseReleased = false;
 	int num_of_available = 0, target_cell_id = 0;
 	std::vector<Cell> available_cells;
 	available_cells.reserve(8);
@@ -204,19 +205,18 @@ void PlayGameScene::aiPlay()
 			}
 		}
 
-	if (num_of_available == 0) //if all available turns == 0 -> game is over
+	if (num_of_available == 0)	//if all available cells == 0 -> game is over
 		endGameScene();
 
-	for (int iteratorAvailable = 0, loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT;
-		iteratorAvailable < num_of_available; loop_worst_delta = CELL_MAX_WEIGHT, ++iteratorAvailable) 
+	int loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT;
+	for (int iteratorAvailable = 0; iteratorAvailable < num_of_available; ++iteratorAvailable) 
 	{
-		for (auto &row : cells)																													//проход по вариантам противника
+		for (auto &row : cells)															//check enemy available moves
 			for (auto &cell : row)
-				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells.at(iteratorAvailable).coordinatesInTab)			//если может перейти фигура
-					&& cell->coordinatesInTab != playableFigure->horseOnBoard)																	//и таргет позиция != позиция коня
-					if (available_cells.at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {										//не прокладываем маршрут через нули
-						//точки, куда возможен переход с позиции available_cells.at(iteratorAvailable)	(куда может перейти противник)
-						//необходимо найти максимальный вес для каждой available_cells.at(iteratorAvailable)
+				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells.at(iteratorAvailable).coordinatesInTab)			
+					&& cell->coordinatesInTab != playableFigure->horseOnBoard)			//and target position != current figure position
+					if (available_cells.at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {	//not plot a route through 0-value cells
+						//cells where the opponent's passage is possible
 						int current_delta = available_cells.at(iteratorAvailable).scoreWeight - cell->scoreWeight;
 						if (current_delta < loop_worst_delta)
 							loop_worst_delta = current_delta;
@@ -225,15 +225,48 @@ void PlayGameScene::aiPlay()
 			target_cell_id = iteratorAvailable;
 			turn_worst_delta = loop_worst_delta;
 		}
+		loop_worst_delta = CELL_MAX_WEIGHT;
 	}
 	playableFigure->horseOnBoard = available_cells.at(target_cell_id).coordinatesInTab;
 	auto acMoveTo = MoveTo::create(2, available_cells.at(target_cell_id).centerCoordinate);
 	playableFigure->getSprite()->runAction(acMoveTo);
 
-	//todo: add checking for available cells 4 user turn
+	//checking available cells for ser turn 
+	num_of_available = 0;
+	for (auto &row : cells)
+		for (auto &cell : row)
+		{
+			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
+				available_cells.push_back(*cell);
+				num_of_available++;
+			}
+		}
+
+	if (num_of_available == 0) //if all available cells == 0 -> game is over
+		endGameScene();
 }
 
 void PlayGameScene::endGameScene()
 {
 	exit(0);
+}
+
+/////pause
+void PlayGameScene::showDialogLost()
+{
+	_eventDispatcher->pauseEventListenersForTarget(this, true);
+
+	auto dl = PauseScene::create();
+	addChild(dl);
+}
+
+void PlayGameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event)
+{
+	EventKeyboard* kbEvent = (EventKeyboard*)event;
+	
+	switch (keyCode) {
+	case EventKeyboard::KeyCode::KEY_ESCAPE:
+		showDialogLost();
+		break;
+	}
 }

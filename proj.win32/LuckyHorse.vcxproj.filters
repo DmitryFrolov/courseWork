@@ -48,6 +48,9 @@
     <ClCompile Include="..\Classes\Core\Figure.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Scenes\PauseScene.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Core\Figure.h">
       <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scenes\PauseScene.h">
+      <Filter>src\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,19 +14,15 @@ bool MainMenuScene::init()
 		return false;
 
 	createBackground();
-	createButtons();
-	auto menu = Menu::createWithArray(MenuItems);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
-
+	createMenuButtons();
 	return true;
 }
 //====================================Buttons
-void MainMenuScene::createButtons()
+void MainMenuScene::createMenuButtons()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-
+	Vector<MenuItem*> MenuItems;
 	auto middleBtnPos = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2); 
 	//set middle (Settings for now) button coordinates at the center of the screenspace
 
@@ -42,6 +38,10 @@ void MainMenuScene::createButtons()
 	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255), 
 		CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this), middleBtnPos - spaceBetweenButtons);
 	MenuItems.pushBack(exitButton);
+
+	auto menu = Menu::createWithArray(MenuItems);
+	menu->setPosition(Vec2::ZERO);
+	this->addChild(menu, 1);
 }
 
 //==============================Background

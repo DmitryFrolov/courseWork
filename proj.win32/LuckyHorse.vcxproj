@@ -152,6 +152,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Core\SettingsConfRW.cpp" />
     <ClCompile Include="..\Classes\Scenes\LoadingFrameScene.cpp" />
     <ClCompile Include="..\Classes\Scenes\MainMenuScene.cpp" />
+    <ClCompile Include="..\Classes\Scenes\PauseScene.cpp" />
     <ClCompile Include="..\Classes\Scenes\PlayGameScene.cpp" />
     <ClCompile Include="..\Classes\Scenes\SettingsScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,6 +167,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Core\UImanager.h" />
     <ClInclude Include="..\Classes\Scenes\LoadingFrameScene.h" />
     <ClInclude Include="..\Classes\Scenes\MainMenuScene.h" />
+    <ClInclude Include="..\Classes\Scenes\PauseScene.h" />
     <ClInclude Include="..\Classes\Scenes\PlayGameScene.h" />
     <ClInclude Include="..\Classes\Scenes\SettingsScene.h" />
     <ClInclude Include="main.h" />

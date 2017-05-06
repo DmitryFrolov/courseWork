@@ -14,19 +14,18 @@ USING_NS_CC;
 class MainMenuScene : public cocos2d::Layer
 {
 private:
-	Vector<MenuItem*>				  MenuItems;
-public:
-	//=================MainMenuSceneCreators
-	static cocos2d::Scene* createScene();
-	virtual bool init();
-	CREATE_FUNC(MainMenuScene);
 	//===============================================Buttons+Sound+Sprites
-	void createButtons();
+	void createMenuButtons();
 	void createBackground();
 	//================================================Callbacks
 	void playGameCallback(Ref* pSender);
 	void settingsSceneCallback(Ref* pSender);
 	void menuCloseCallback(cocos2d::Ref* pSender);
+public:
+	//=================MainMenuSceneCreators
+	static cocos2d::Scene* createScene();
+	virtual bool init();
+	CREATE_FUNC(MainMenuScene);
 };
 
 #endif //!__MAIN_MENU_SCENE_H__
