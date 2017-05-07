@@ -14,10 +14,9 @@ bool PauseScene::init()
 	{
 		return false;
 	}
-	/*auto _kbListener = EventListenerKeyboard::create();
-	_kbListener->onKeyReleased */
 	createButtons();
-	
+
+	return true;
 }
 
 void PauseScene::createButtons()
@@ -34,10 +33,13 @@ void PauseScene::createButtons()
 	auto resumeButton = UImanager::createButton("Resume", ccc4(215, 255, 0, 255),
 		CC_CALLBACK_1(PauseScene::resumeButtonCallback, this), middleBtnPos + spaceBetweenButtons);
 
-	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(PauseScene::exitButtonCallback, this), middleBtnPos - spaceBetweenButtons);
+	auto menuButton = UImanager::createButton("Menu", ccc4(215, 255, 0, 255),
+		CC_CALLBACK_1(PauseScene::menuButtonCallback, this), middleBtnPos - spaceBetweenButtons);
 
-	auto menu = Menu::create(settingsButton, resumeButton, exitButton, NULL);
+	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255),
+		CC_CALLBACK_1(PauseScene::exitButtonCallback, this), middleBtnPos - 2 * spaceBetweenButtons);
+
+	auto menu = Menu::create(settingsButton, resumeButton, menuButton, exitButton, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 }
@@ -50,8 +52,17 @@ void PauseScene::settingsSceneCallback(Ref* pSender)
 
 void PauseScene::resumeButtonCallback(Ref* pSender)
 {
-	_eventDispatcher->resumeEventListenersForTarget(this->getParent(), true);
-	this->getParent()->removeChild(this);
+	auto parent = this->getParent();
+	((PlayGameScene*)parent)->colorLayer->setOpacity(0);
+	
+	_eventDispatcher->resumeEventListenersForTarget(parent, true);
+	parent->removeChild(this);
+}
+
+void PauseScene::menuButtonCallback(Ref* pSender)
+{
+	auto scene = MainMenuScene::createScene();
+	Director::getInstance()->replaceScene(scene);
 }
 
 void PauseScene::exitButtonCallback(Ref* pSender)

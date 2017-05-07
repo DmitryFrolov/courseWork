@@ -20,7 +20,7 @@ class PlayGameScene : public Layer
 {
 private:
 	Figure* playableFigure;
-
+	
 	ChessBoard* chessBoard;
 	std::vector<std::vector<Cell*>> cells;
 	Vec2 LeftUpperBoardPoint;
@@ -30,6 +30,7 @@ private:
 	Label* player1ScoreLabel;
 	Label* player2ScoreLabel;
 public:
+	LayerColor* colorLayer;
 	CREATE_FUNC(PlayGameScene);
 	virtual bool init();
 	static Scene* createScene();
@@ -42,15 +43,14 @@ public:
 
 	void onMouseUp(Event *event);
 	void runMainGameSequence(Sprite *obj, Vec2 moveto);
-	void runMainGameSequence(Sprite *obj);				//overload for ai vs ai
+	void runMainGameSequence(Sprite *obj); //overload for ai vs ai
 
 	//returns coordinates of the center of the nearest cell
 	Vec2 getNearestCellCenterCoordinates(Vec2 coordinate);
 	void aiPlay();
 	void endGameScene();
-	////////////pause
-	void showDialogLost();
+	//pause
+	void showDialogPause();
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event);
 };
 #endif // !_PLAY_SCENE_H_
-

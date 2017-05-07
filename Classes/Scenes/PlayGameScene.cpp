@@ -36,6 +36,13 @@ void PlayGameScene::drawGameObjects()
 	drawBoard();
 	drawFigure();
 	drawPlayerScoreLabels();
+
+	auto visbleSize = Director::getInstance()->getVisibleSize();
+	auto color = new LayerColor();
+	colorLayer = color->create(ccc4(0, 0, 0, 0), visbleSize.width, visbleSize.height);
+	colorLayer->ignoreAnchorPointForPosition(false);
+	colorLayer->setPosition(Vec2(visbleSize.width / 2, visbleSize.height / 2));
+	this->addChild(colorLayer);
 }
 
 void PlayGameScene::drawBoard() 
@@ -61,7 +68,7 @@ void PlayGameScene::drawBackground()
 void PlayGameScene::drawFigure()
 {
 	playableFigure = new Figure(cells.at(0).at(0)->centerCoordinate);
-	this->addChild(playableFigure->getSprite(), 1);
+	this->addChild(playableFigure->getSprite(), 0);
 }
 
 void PlayGameScene::drawPlayerScoreLabels()
@@ -251,13 +258,15 @@ void PlayGameScene::endGameScene()
 	exit(0);
 }
 
-/////pause
-void PlayGameScene::showDialogLost()
+//pause
+void PlayGameScene::showDialogPause()
 {
 	_eventDispatcher->pauseEventListenersForTarget(this, true);
 
-	auto dl = PauseScene::create();
-	addChild(dl);
+	auto scene = PauseScene::create();
+	this->addChild(scene, 1);
+	
+	colorLayer->setOpacity(140);
 }
 
 void PlayGameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event)
@@ -266,7 +275,7 @@ void PlayGameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event)
 	
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
-		showDialogLost();
+		showDialogPause();
 		break;
 	}
 }
