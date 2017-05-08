@@ -85,4 +85,4 @@ public:
 	bool isPositionBelongsToBoard(Vec2 position);
 };
 
-#endif _CHESS_BOARD_H_
+#endif //_CHESS_BOARD_H_

@@ -2,6 +2,7 @@
 #define _PLAY_SCENE_H_
 #include "cocos2d.h"
 #include "Classes\Scenes\PauseScene.h"
+#include "Classes\Scenes\GameResultScene.h"
 #include "Core\UImanager.h"
 #include "Core\ChessBoard.h"
 #include "Core\Figure.h"
@@ -20,13 +21,11 @@ class PlayGameScene : public Layer
 {
 private:
 	Figure* playableFigure;
-	
 	ChessBoard* chessBoard;
 	std::vector<std::vector<Cell*>> cells;
 	Vec2 LeftUpperBoardPoint;
 	TurnState currentTurn;
-	int player1Score;
-	int player2Score;
+	int player1Score, player2Score;
 	Label* player1ScoreLabel;
 	Label* player2ScoreLabel;
 public:

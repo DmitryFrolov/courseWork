@@ -2,6 +2,7 @@
 
 ChessBoard::ChessBoard(int _cellsAmount, int _cellMaxWeight)
 {
+	srand(time(0));
 	cellsAmount = _cellsAmount;
 	cellMaxWeight = _cellMaxWeight;
 	visibleSize = Director::getInstance()->getVisibleSize();

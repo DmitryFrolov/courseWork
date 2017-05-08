@@ -49,7 +49,7 @@ public:
 											const Vec2 &position)
 	{
 		Label *label = Label::createWithTTF(text, fontFilePath, fontSize);
-		label->setAnchorPoint(Vec2(0, 0.5));
+		label->setAnchorPoint(Vec2(0.5, 0.5));
 		label->setPosition(position);
 		return label;
 	}

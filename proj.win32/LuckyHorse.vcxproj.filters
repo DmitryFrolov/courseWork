@@ -51,6 +51,9 @@
     <ClCompile Include="..\Classes\Scenes\PauseScene.cpp">
       <Filter>src\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Scenes\GameResultScene.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -90,6 +93,9 @@
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Scenes\PauseScene.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scenes\GameResultScene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
   </ItemGroup>

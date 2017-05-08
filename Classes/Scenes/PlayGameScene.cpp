@@ -107,7 +107,7 @@ void PlayGameScene::onMouseUp(Event *event)
 		Cell* targetCell = cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y);
 		
 		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
-			&& playableFigure->horseReleased && targetCell->scoreWeight != 0 &&
+			&& playableFigure->horseReleased && //targetCell->scoreWeight != 0 &&
 			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
 		{ 
 			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
@@ -213,7 +213,10 @@ void PlayGameScene::aiPlay()
 		}
 
 	if (num_of_available == 0)	//if all available cells == 0 -> game is over
+	{
 		endGameScene();
+		return;
+	}
 
 	int loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT;
 	for (int iteratorAvailable = 0; iteratorAvailable < num_of_available; ++iteratorAvailable) 
@@ -249,13 +252,16 @@ void PlayGameScene::aiPlay()
 			}
 		}
 
-	if (num_of_available == 0) //if all available cells == 0 -> game is over
+	if (num_of_available == 0) { //if all available cells == 0 -> game is over
 		endGameScene();
+		return;
+	}
 }
 
 void PlayGameScene::endGameScene()
 {
-	exit(0);
+	auto scene = GameResultScene::createScene(player1Score, player2Score);
+	Director::getInstance()->replaceScene(scene);
 }
 
 //pause

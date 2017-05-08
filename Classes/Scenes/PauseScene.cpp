@@ -67,5 +67,11 @@ void PauseScene::menuButtonCallback(Ref* pSender)
 
 void PauseScene::exitButtonCallback(Ref* pSender)
 {
+	AudioManager::getInstance().endAudio();
+	Director::getInstance()->end();
 	exit(0);
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif  
 }
