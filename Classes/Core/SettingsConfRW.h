@@ -17,9 +17,14 @@ public:
 	//return value of background music volume in range 0.0 ... 1.0
 	static float readBGMusicVolume();
 
-	/*arg: background music volume in range 0.0 ... 1.0
-	*/
+	//arg: background music volume in range 0.0 ... 1.0
 	static void writeBGMusicVolume(float volume);
+
+	//return 1 if AI opponent is enabled, otherwise 0
+	static bool readAIEnabled();
+
+	//arg: 1 if AI opponent  should by enabled, otherwise 0 
+	static void writeAIEnabled(bool isEnabled);
 };
 
 #endif //_SETTINGS_CONFIG_RW

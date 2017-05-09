@@ -1,4 +1,8 @@
 #include "GameResultScene.h"
+
+int GameResultScene::p1Score;
+int GameResultScene::p2Score;
+
 Scene* GameResultScene::createScene(int _p1Score, int _p2Score)
 {
 	p1Score = _p1Score, p2Score = _p2Score;

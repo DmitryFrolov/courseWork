@@ -156,7 +156,8 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 	});
 
 	Sequence* sequence;
-	if (AI_ENABLED)
+	//if (AI_ENABLED)
+	if(SettingsConfRW::readAIEnabled())
 		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, DelayTime::create(0.5),
 			aiTurn, DelayTime::create(ANIMATION_LENGHT), upgradeScore, switchTurn, releaseHorse, nullptr);
 	else

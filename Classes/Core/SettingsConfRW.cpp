@@ -33,3 +33,20 @@ void SettingsConfRW::writeBGMusicVolume(float volume)
 		dConf::setValueByKey(CONFIG_PATH, "background_music_volume", std::to_string(volume));
 	}
 }
+
+bool SettingsConfRW::readAIEnabled()
+{
+	if (!(_access(CONFIG_PATH, 0) == -1)) {
+		std::string temp = dConf::getValueByKey(CONFIG_PATH, "is_ai_opponent_enabled");
+		return dConf::stringToBool(temp);
+	}
+	return false;
+}
+
+void SettingsConfRW::writeAIEnabled(bool isEnabled)
+{
+	if (!(_access(CONFIG_PATH, 0) == -1)) {
+		std::string temp = dConf::boolToString(isEnabled);
+		dConf::setValueByKey(CONFIG_PATH, "is_ai_opponent_enabled", temp);
+	}
+}

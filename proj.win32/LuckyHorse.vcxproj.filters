@@ -16,6 +16,9 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{56c70fea-7125-4ce8-8f69-d183f7f16b0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GameObjects">
+      <UniqueIdentifier>{5ce70b8d-3701-4b46-8883-3b4d95e0a309}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,17 +45,17 @@
     <ClCompile Include="..\Classes\Scenes\PlayGameScene.cpp">
       <Filter>src\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Core\ChessBoard.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Core\Figure.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Scenes\PauseScene.cpp">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Scenes\GameResultScene.cpp">
       <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameObjects\ChessBoard.cpp">
+      <Filter>src\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameObjects\Figure.cpp">
+      <Filter>src\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,17 +89,17 @@
     <ClInclude Include="..\Classes\Scenes\PlayGameScene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Core\ChessBoard.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Core\Figure.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Scenes\PauseScene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Scenes\GameResultScene.h">
       <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameObjects\ChessBoard.h">
+      <Filter>src\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameObjects\Figure.h">
+      <Filter>src\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,7 @@ class SettingsScene : public cocos2d::Layer
 private:
 	Slider							  *volumeSlider;
 	CheckBox							 *bgSoundCB;
+	CheckBox						   *AIEnabledCB;
 	Vector<MenuItem*>					  MenuItems;
 public:
 	//=============================SceneCreators
@@ -24,13 +25,14 @@ public:
 	virtual bool init();
 	CREATE_FUNC(SettingsScene);
 	//=============================
-	void createBackground();
+	void drawBackground();
 	//=============================UI Elements	
-	void createUserInterface();
-	void createBGSoundCheckBox();
-	void createBackButton();
-	void createApplyButton();
-	void createMusicVolumeSlider();
+	void drawUserInterface();
+	void drawBGSoundCheckBox();
+	void drawAIStateCheckBox();
+	void drawBackButton();
+	void drawApplyButton();
+	void drawMusicVolumeSlider();
 	void setDefaultUIState();
 	//=============================Callbacks
 	void backButtonPressed(Ref* pSender);

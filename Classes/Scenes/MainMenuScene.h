@@ -1,5 +1,6 @@
 #ifndef __MAIN_MENU_SCENE_H__
 #define __MAIN_MENU_SCENE_H__
+
 #include "cocos2d.h"
 #include "Core\UImanager.h"
 #include "Core\AudioManager.h"

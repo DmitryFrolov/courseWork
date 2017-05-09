@@ -4,8 +4,9 @@
 #include "Classes\Scenes\PauseScene.h"
 #include "Classes\Scenes\GameResultScene.h"
 #include "Core\UImanager.h"
-#include "Core\ChessBoard.h"
-#include "Core\Figure.h"
+#include "Core\SettingsConfRW.h"
+#include "GameObjects\ChessBoard.h"
+#include "GameObjects\Figure.h"
 USING_NS_CC;
 
 #define AI_ENABLED				true

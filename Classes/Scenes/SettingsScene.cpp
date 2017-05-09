@@ -13,7 +13,7 @@ bool SettingsScene::init()
 	{
 		return false;
 	}
-	createUserInterface();
+	drawUserInterface();
 	setDefaultUIState();
 
 	auto menu = Menu::createWithArray(MenuItems);
@@ -24,30 +24,31 @@ bool SettingsScene::init()
 
 //========================================UI
 
-void SettingsScene::createUserInterface()
+void SettingsScene::drawUserInterface()
 {
-	createBackground();
-	createBGSoundCheckBox();
-	createMusicVolumeSlider();
-	createBackButton();
-	createApplyButton();
+	drawBackground();
+	drawBGSoundCheckBox();
+	drawMusicVolumeSlider();
+	drawAIStateCheckBox();
+	drawBackButton();
+	drawApplyButton();
 }
 
-void SettingsScene::createBackground()
+void SettingsScene::drawBackground()
 {
 	auto backgroundImage = UImanager::createBackground(SETTINGS_BACKROUND_IMAGE, 0.9f);
 	this->addChild(backgroundImage, -1);
 }
 
-void SettingsScene::createBGSoundCheckBox()
+void SettingsScene::drawBGSoundCheckBox()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto sliderLabel = UImanager::createTextLabel("Background sound enabled",
+	auto textLabel = UImanager::createTextLabel("Background sound enabled",
 		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2,
 		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10));
 
-	bgSoundCB = UImanager::createCheckBox(sliderLabel->getPosition() + Vec2(220, 6), 0.03f);
+	bgSoundCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
 	bgSoundCB->addEventListener([&](Ref* sender, CheckBox::EventType type) {
 		if (type == CheckBox::EventType::SELECTED) {
 			AudioManager::getInstance().playBackgroundAudio();
@@ -57,11 +58,11 @@ void SettingsScene::createBGSoundCheckBox()
 			AudioManager::getInstance().stopBackgroundAudio();
 	});
 
-	this->addChild(sliderLabel, 1);
+	this->addChild(textLabel, 1);
 	this->addChild(bgSoundCB, 1);
 }
 
-void SettingsScene::createMusicVolumeSlider()
+void SettingsScene::drawMusicVolumeSlider()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
@@ -79,7 +80,31 @@ void SettingsScene::createMusicVolumeSlider()
 	this->addChild(volumeSlider);
 }
 
-void SettingsScene::createBackButton()
+void SettingsScene::drawAIStateCheckBox()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	
+	auto textLabel = UImanager::createTextLabel("AI opponent enabled",
+		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2,
+		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10 - 140));
+
+	AIEnabledCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
+/*	AIEnabledCB->addEventListener([&](Ref* sender, CheckBox::EventType type) {
+		if (type == CheckBox::EventType::SELECTED) {
+			AudioManager::getInstance().playBackgroundAudio();
+			AudioManager::getInstance().setBackgroundAudioVolume(volumeSlider->getPercent() / 100.f);
+		}
+		else if (type == CheckBox::EventType::UNSELECTED)
+			AudioManager::getInstance().stopBackgroundAudio();
+	});
+	*/
+	this->addChild(textLabel, 1);
+	this->addChild(AIEnabledCB, 1);
+
+}
+
+void SettingsScene::drawBackButton()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
@@ -88,7 +113,7 @@ void SettingsScene::createBackButton()
 	MenuItems.pushBack(backButton);
 }
 
-void SettingsScene::createApplyButton()
+void SettingsScene::drawApplyButton()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
@@ -102,6 +127,7 @@ void SettingsScene::setDefaultUIState()
 {
 	bgSoundCB->setSelectedState(SettingsConfRW::readBGMusicPlaying());
 	volumeSlider->setPercent(SettingsConfRW::readBGMusicVolume() * 100);
+	AIEnabledCB->setSelectedState(SettingsConfRW::readAIEnabled());
 }
 
 //======================================Callbacks
@@ -130,4 +156,6 @@ void SettingsScene::applyButtonPressed(Ref* pSender)
 {
 	SettingsConfRW::writeBGMusicPlaying(bgSoundCB->isSelected());
 	SettingsConfRW::writeBGMusicVolume(volumeSlider->getPercent() / 100.f);
+
+	SettingsConfRW::writeAIEnabled(AIEnabledCB->isSelected());
 }
