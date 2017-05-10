@@ -76,24 +76,14 @@ void GameResultScene::drawMenu()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	Vector<MenuItem*> MenuItems;
-	auto middleBtnPos = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4);
-
-	auto againButton = UImanager::createButton("Menu", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(GameResultScene::playGameCallback, this), middleBtnPos);
-	MenuItems.pushBack(againButton);
-	Vec2 spaceBetweenButtons = Vec2(againButton->getContentSize().width * 1.5, 0);
-
-	auto menuButton = UImanager::createButton("To menu", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(GameResultScene::menuCallback, this), middleBtnPos - spaceBetweenButtons);
-	MenuItems.pushBack(menuButton);
-
-	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(GameResultScene::exitCallback, this), middleBtnPos + spaceBetweenButtons);
-	MenuItems.pushBack(exitButton);
-
-	auto menu = Menu::createWithArray(MenuItems);
-	menu->setPosition(Vec2::ZERO);
+	auto menuCenter = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4);
+	
+	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
+	data->reserve(3);
+	data->push_back(new ButtonData("Again", CC_CALLBACK_1(GameResultScene::playGameCallback, this)));
+	data->push_back(new ButtonData("To menu", CC_CALLBACK_1(GameResultScene::menuCallback, this)));
+	data->push_back(new ButtonData("Exit", CC_CALLBACK_1(GameResultScene::exitCallback, this)));
+	auto menu = UImanager::createMenu(data, false, menuCenter);
 	this->addChild(menu, 1);
 }
 

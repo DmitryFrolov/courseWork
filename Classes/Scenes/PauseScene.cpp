@@ -15,32 +15,18 @@ bool PauseScene::init()
 		return false;
 	}
 	createButtons();
-
 	return true;
 }
 
 void PauseScene::createButtons()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto middleBtnPos = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
-	
-	auto settingsButton = UImanager::createButton("Settings", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(PauseScene::settingsSceneCallback, this), middleBtnPos);
-
-	Vec2 spaceBetweenButtons = Vec2(0, settingsButton->getContentSize().height * 1.5);
-
-	auto resumeButton = UImanager::createButton("Resume", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(PauseScene::resumeButtonCallback, this), middleBtnPos + spaceBetweenButtons);
-
-	auto menuButton = UImanager::createButton("Menu", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(PauseScene::menuButtonCallback, this), middleBtnPos - spaceBetweenButtons);
-
-	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(PauseScene::exitButtonCallback, this), middleBtnPos - 2 * spaceBetweenButtons);
-
-	auto menu = Menu::create(settingsButton, resumeButton, menuButton, exitButton, NULL);
-	menu->setPosition(Vec2::ZERO);
+	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
+	data->reserve(4);
+	data->push_back(new ButtonData("Resume", CC_CALLBACK_1(PauseScene::resumeButtonCallback, this)));
+	data->push_back(new ButtonData("Menu", CC_CALLBACK_1(PauseScene::menuButtonCallback, this)));
+	data->push_back(new ButtonData("Settings", CC_CALLBACK_1(PauseScene::settingsSceneCallback, this)));
+	data->push_back(new ButtonData("Exit", CC_CALLBACK_1(PauseScene::exitButtonCallback, this)));
+	auto menu = UImanager::createMenu(data);
 	this->addChild(menu, 1);
 }
 
@@ -52,8 +38,8 @@ void PauseScene::settingsSceneCallback(Ref* pSender)
 
 void PauseScene::resumeButtonCallback(Ref* pSender)
 {
-	auto parent = this->getParent();
-	((PlayGameScene*)parent)->colorLayer->setOpacity(0);
+	auto parent = this->getParent();				
+	((PlayGameScene*)parent)->colorLayer->setOpacity(0); //danger
 	
 	_eventDispatcher->resumeEventListenersForTarget(parent, true);
 	parent->removeChild(this);

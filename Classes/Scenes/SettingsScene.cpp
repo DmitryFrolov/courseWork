@@ -90,18 +90,9 @@ void SettingsScene::drawAIStateCheckBox()
 		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10 - 140));
 
 	AIEnabledCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
-/*	AIEnabledCB->addEventListener([&](Ref* sender, CheckBox::EventType type) {
-		if (type == CheckBox::EventType::SELECTED) {
-			AudioManager::getInstance().playBackgroundAudio();
-			AudioManager::getInstance().setBackgroundAudioVolume(volumeSlider->getPercent() / 100.f);
-		}
-		else if (type == CheckBox::EventType::UNSELECTED)
-			AudioManager::getInstance().stopBackgroundAudio();
-	});
-	*/
+
 	this->addChild(textLabel, 1);
 	this->addChild(AIEnabledCB, 1);
-
 }
 
 void SettingsScene::drawBackButton()

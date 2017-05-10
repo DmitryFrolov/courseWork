@@ -7,6 +7,18 @@ USING_NS_CC;
 #define BUTTON_LABEL_FONT "fonts/Enchanted Land cyr-lat.ttf"
 #define BUTTON_LABEL_SIZE 60
 
+struct ButtonData
+{
+	std::string text;
+	cocos2d::ccMenuCallback callback;
+
+	ButtonData(std::string text, cocos2d::ccMenuCallback callback)
+	{
+		this->text = text;
+		this->callback = callback;
+	}
+};
+
 static class UImanager 
 {
 public:
@@ -77,6 +89,46 @@ public:
 		checkBox->setScale(scale);
 
 		return checkBox;
+	}
+
+	static cocos2d::Menu* createMenu(	const std::vector<ButtonData*>* data,
+										const bool isMenuVertical = true,
+										Vec2 menuCenterPosition = Vec2::ZERO,
+										const float spaceSize = 1.2,
+										const cocos2d::Color4B color = ccc4(215, 255, 0, 255))
+	{
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		auto origin = Director::getInstance()->getVisibleOrigin();
+
+		Vector <MenuItem*> buttons;
+		buttons.reserve(data->size());
+		for (auto currentData : *data)
+			buttons.pushBack(createButton(currentData->text, color, currentData->callback, Vec2::ZERO));
+		
+		if (menuCenterPosition == Vec2::ZERO)
+			menuCenterPosition = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+
+		Vec2 btnSpace, firstBtnPosition;
+		if (isMenuVertical) {
+			btnSpace = Vec2(0, buttons.at(0)->getContentSize().height * (1 + spaceSize)); /*default space between btns*/
+			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
+			firstBtnPosition = menuCenterPosition + menuSize / 2;
+		}
+		else {
+			btnSpace = Vec2(buttons.at(0)->getContentSize().width * (1 + spaceSize), 0);
+			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
+			firstBtnPosition = menuCenterPosition - menuSize / 2;						
+		}
+		if (isMenuVertical)
+			for (size_t it = 0; it < buttons.size(); it++)
+				buttons.at(it)->setPosition(firstBtnPosition - btnSpace * it);
+		else
+			for (size_t it = 0; it < buttons.size(); it++)
+				buttons.at(it)->setPosition(firstBtnPosition + btnSpace * it);
+		
+		auto menu = Menu::createWithArray(buttons);
+		menu->setPosition(Vec2::ZERO);
+		return menu;
 	}
 };
 

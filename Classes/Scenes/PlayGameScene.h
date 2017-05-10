@@ -13,7 +13,7 @@ USING_NS_CC;
 #define AI_ONLY					false
 #define CELLS_AMOUNT_IN_A_ROW	8
 #define CELL_MAX_WEIGHT			99
-#define ANIMATION_LENGHT		2
+#define ANIMATION_LENGHT		1
 #define CHESS_BACKROUND_IMAGE	"backgrounds/chess-background.jpg"
 
 enum TurnState {_PLAYER_1_TURN_, _PLAYER_2_TURN_};
@@ -45,6 +45,7 @@ public:
 	void runMainGameSequence(Sprite *obj, Vec2 moveto);
 	void runMainGameSequence(Sprite *obj); //overload for ai vs ai
 
+	std::vector<Cell> *getAvailableCells();
 	//returns coordinates of the center of the nearest cell
 	Vec2 getNearestCellCenterCoordinates(Vec2 coordinate);
 	void aiPlay();

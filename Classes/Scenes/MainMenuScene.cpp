@@ -20,27 +20,12 @@ bool MainMenuScene::init()
 //====================================Buttons
 void MainMenuScene::createMenuButtons()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
-	Vector<MenuItem*> MenuItems;
-	auto middleBtnPos = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2); 
-	//set middle (Settings for now) button coordinates at the center of the screenspace
-
-	auto settingsButton = UImanager::createButton("Settings", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(MainMenuScene::settingsSceneCallback, this), middleBtnPos);
-	MenuItems.pushBack(settingsButton);
-	Vec2 spaceBetweenButtons = Vec2(0, settingsButton->getContentSize().height * 1.5);
-
-	auto playButton = UImanager::createButton("Play", ccc4(215, 255, 0, 255),
-		CC_CALLBACK_1(MainMenuScene::playGameCallback, this), middleBtnPos + spaceBetweenButtons);
-	MenuItems.pushBack(playButton);
-	
-	auto exitButton = UImanager::createButton("Exit", ccc4(215, 255, 0, 255), 
-		CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this), middleBtnPos - spaceBetweenButtons);
-	MenuItems.pushBack(exitButton);
-
-	auto menu = Menu::createWithArray(MenuItems);
-	menu->setPosition(Vec2::ZERO);
+	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
+	data->reserve(3);
+	data->push_back(new ButtonData("Play", CC_CALLBACK_1(MainMenuScene::playGameCallback, this)));
+	data->push_back(new ButtonData("Settings", CC_CALLBACK_1(MainMenuScene::settingsSceneCallback, this)));
+	data->push_back(new ButtonData("Exit", CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this)));
+	auto menu = UImanager::createMenu(data);
 	this->addChild(menu, 1);
 }
 

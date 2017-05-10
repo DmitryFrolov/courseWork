@@ -107,7 +107,7 @@ void PlayGameScene::onMouseUp(Event *event)
 		Cell* targetCell = cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y);
 		
 		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
-			&& playableFigure->horseReleased && //targetCell->scoreWeight != 0 &&
+			&& playableFigure->horseReleased && targetCell->scoreWeight != 0 &&
 			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
 		{ 
 			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
@@ -144,6 +144,14 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 		}
 	});
 
+	auto checkAvailableCellsExist = CallFunc::create([this]() {
+		if (getAvailableCells()->empty())	//if all available cells == 0 -> game is over
+		{
+			endGameScene();
+			return;
+		}
+	});
+
 	auto switchTurn = CallFunc::create([this]() {
 		if (currentTurn == _PLAYER_1_TURN_)
 			currentTurn = _PLAYER_2_TURN_;
@@ -156,12 +164,11 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 	});
 
 	Sequence* sequence;
-	//if (AI_ENABLED)
 	if(SettingsConfRW::readAIEnabled())
-		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, DelayTime::create(0.5),
-			aiTurn, DelayTime::create(ANIMATION_LENGHT), upgradeScore, switchTurn, releaseHorse, nullptr);
+		sequence = Sequence::create(acMoveTo, upgradeScore, checkAvailableCellsExist, switchTurn, DelayTime::create(0.5),
+			aiTurn, DelayTime::create(ANIMATION_LENGHT), upgradeScore, checkAvailableCellsExist, switchTurn, releaseHorse, nullptr);
 	else
-		sequence = Sequence::create(acMoveTo, upgradeScore, switchTurn, releaseHorse, nullptr);
+		sequence = Sequence::create(acMoveTo, upgradeScore, checkAvailableCellsExist, switchTurn, releaseHorse, nullptr);
 	obj->runAction(sequence);
 }
 
@@ -200,35 +207,17 @@ void PlayGameScene::runMainGameSequence(Sprite *obj)//overload for ai vs ai debu
 
 void PlayGameScene::aiPlay()
 {
-	int num_of_available = 0, target_cell_id = 0;
-	std::vector<Cell> available_cells;
-	available_cells.reserve(8);
-
-	for (auto &row : cells)
-		for (auto &cell : row)
-		{
-			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
-				available_cells.push_back(*cell);
-				num_of_available++;
-			}
-		}
-
-	if (num_of_available == 0)	//if all available cells == 0 -> game is over
-	{
-		endGameScene();
-		return;
-	}
-
-	int loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT;
-	for (int iteratorAvailable = 0; iteratorAvailable < num_of_available; ++iteratorAvailable) 
+	auto available_cells = getAvailableCells();
+	int loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT, target_cell_id = 0;
+	for (int iteratorAvailable = 0; iteratorAvailable < available_cells->size(); ++iteratorAvailable)
 	{
 		for (auto &row : cells)															//check enemy available moves
 			for (auto &cell : row)
-				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells.at(iteratorAvailable).coordinatesInTab)			
+				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells->at(iteratorAvailable).coordinatesInTab)			
 					&& cell->coordinatesInTab != playableFigure->horseOnBoard)			//and target position != current figure position
-					if (available_cells.at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {	//not plot a route through 0-value cells
+					if (available_cells->at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {	//not plot a route through 0-value cells
 						//cells where the opponent's passage is possible
-						int current_delta = available_cells.at(iteratorAvailable).scoreWeight - cell->scoreWeight;
+						int current_delta = available_cells->at(iteratorAvailable).scoreWeight - cell->scoreWeight;
 						if (current_delta < loop_worst_delta)
 							loop_worst_delta = current_delta;
 					}
@@ -238,25 +227,24 @@ void PlayGameScene::aiPlay()
 		}
 		loop_worst_delta = CELL_MAX_WEIGHT;
 	}
-	playableFigure->horseOnBoard = available_cells.at(target_cell_id).coordinatesInTab;
-	auto acMoveTo = MoveTo::create(2, available_cells.at(target_cell_id).centerCoordinate);
+	playableFigure->horseOnBoard = available_cells->at(target_cell_id).coordinatesInTab;
+	auto acMoveTo = MoveTo::create(ANIMATION_LENGHT, available_cells->at(target_cell_id).centerCoordinate);
 	playableFigure->getSprite()->runAction(acMoveTo);
+}
 
-	//checking available cells for ser turn 
-	num_of_available = 0;
+std::vector<Cell> *PlayGameScene::getAvailableCells()
+{
+	std::vector<Cell> *available_cells = new std::vector<Cell>();
+	available_cells->reserve(8);
+
 	for (auto &row : cells)
 		for (auto &cell : row)
 		{
 			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
-				available_cells.push_back(*cell);
-				num_of_available++;
+				available_cells->push_back(*cell);
 			}
 		}
-
-	if (num_of_available == 0) { //if all available cells == 0 -> game is over
-		endGameScene();
-		return;
-	}
+	return available_cells;
 }
 
 void PlayGameScene::endGameScene()
