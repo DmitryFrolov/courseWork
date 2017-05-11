@@ -19,7 +19,7 @@ struct ButtonData
 	}
 };
 
-static class UImanager 
+class UImanager 
 {
 public:
 	static ui::LoadingBar* createLoadingBar(const Vec2 &loadingBarPosition)
@@ -113,19 +113,15 @@ public:
 			btnSpace = Vec2(0, buttons.at(0)->getContentSize().height * (1 + spaceSize)); /*default space between btns*/
 			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
 			firstBtnPosition = menuCenterPosition + menuSize / 2;
-		}
-		else {
-			btnSpace = Vec2(buttons.at(0)->getContentSize().width * (1 + spaceSize), 0);
-			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
-			firstBtnPosition = menuCenterPosition - menuSize / 2;						
-		}
-		if (isMenuVertical)
 			for (size_t it = 0; it < buttons.size(); it++)
 				buttons.at(it)->setPosition(firstBtnPosition - btnSpace * it);
-		else
+		} else {
+			btnSpace = Vec2(buttons.at(0)->getContentSize().width * (1 + spaceSize), 0);
+			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
+			firstBtnPosition = menuCenterPosition - menuSize / 2;		
 			for (size_t it = 0; it < buttons.size(); it++)
 				buttons.at(it)->setPosition(firstBtnPosition + btnSpace * it);
-		
+		}		
 		auto menu = Menu::createWithArray(buttons);
 		menu->setPosition(Vec2::ZERO);
 		return menu;

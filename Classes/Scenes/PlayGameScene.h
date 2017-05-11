@@ -24,7 +24,6 @@ private:
 	Figure* playableFigure;
 	ChessBoard* chessBoard;
 	std::vector<std::vector<Cell*>> cells;
-	Vec2 LeftUpperBoardPoint;
 	TurnState currentTurn;
 	int player1Score, player2Score;
 	Label* player1ScoreLabel;
@@ -37,6 +36,7 @@ public:
 	//============drawers
 	void drawGameObjects();
 	void drawBoard();
+	void drawPauseButton();
 	void drawBackground();
 	void drawFigure();
 	void drawPlayerScoreLabels();
@@ -51,7 +51,7 @@ public:
 	void aiPlay();
 	void endGameScene();
 	//pause
-	void showDialogPause();
+	void showDialogPause(Ref* pSender);
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event);
 };
 #endif // !_PLAY_SCENE_H_

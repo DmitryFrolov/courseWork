@@ -18,7 +18,6 @@ private:
 	Slider							  *volumeSlider;
 	CheckBox							 *bgSoundCB;
 	CheckBox						   *AIEnabledCB;
-	Vector<MenuItem*>					  MenuItems;
 public:
 	//=============================SceneCreators
 	static cocos2d::Scene* createScene();
@@ -30,8 +29,7 @@ public:
 	void drawUserInterface();
 	void drawBGSoundCheckBox();
 	void drawAIStateCheckBox();
-	void drawBackButton();
-	void drawApplyButton();
+	void drawMenu();
 	void drawMusicVolumeSlider();
 	void setDefaultUIState();
 	//=============================Callbacks

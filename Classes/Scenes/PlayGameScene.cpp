@@ -33,6 +33,7 @@ bool PlayGameScene::init()
 void PlayGameScene::drawGameObjects() 
 {
 	drawBackground();
+	drawPauseButton();
 	drawBoard();
 	drawFigure();
 	drawPlayerScoreLabels();
@@ -50,7 +51,6 @@ void PlayGameScene::drawBoard()
 	chessBoard = new ChessBoard(CELLS_AMOUNT_IN_A_ROW, CELL_MAX_WEIGHT);
 	chessBoard->create();
 	cells = *chessBoard->getCells();
-	LeftUpperBoardPoint = chessBoard->getLeftUpperBoardPoint();
 	
 	for (auto &row : cells)
 		for (auto &cell : row) {
@@ -93,6 +93,20 @@ void PlayGameScene::drawPlayerScoreLabels()
 	this->addChild(player2ScoreLabel, 0, "text_label");
 }
 
+void PlayGameScene::drawPauseButton()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+
+	auto closeItem = MenuItemImage::create("settings-icon.png", "settings-icon.png", CC_CALLBACK_1(PlayGameScene::showDialogPause, this));
+	closeItem->setScale(0.1);
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width *  closeItem->getScaleX() / 2, 
+												    origin.y + closeItem->getContentSize().height * closeItem->getScaleY() / 2));
+	auto menu = Menu::create(closeItem, NULL);
+	menu->setPosition(Vec2::ZERO);
+	this->addChild(menu);
+}
+
 //==================executing when mouse up
 void PlayGameScene::onMouseUp(Event *event)
 {
@@ -104,10 +118,10 @@ void PlayGameScene::onMouseUp(Event *event)
 	else {
 		EventMouse* mEvent = (EventMouse*)event;
 		Vec2 cursorPosition = Vec2(mEvent->getCursorX(), mEvent->getCursorY());
-		Cell* targetCell = cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y);
 		
 		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
-			&& playableFigure->horseReleased && targetCell->scoreWeight != 0 &&
+			&& playableFigure->horseReleased && 
+			cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y)->scoreWeight != 0 &&
 			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
 		{ 
 			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
@@ -254,14 +268,19 @@ void PlayGameScene::endGameScene()
 }
 
 //pause
-void PlayGameScene::showDialogPause()
+void PlayGameScene::showDialogPause(Ref* pSender)
 {
 	_eventDispatcher->pauseEventListenersForTarget(this, true);
+	colorLayer->setOpacity(140);
+	Vector<Node*> childs = this->getChildren();
+	for( auto child : childs)
+	{
+		CCSprite *sprite = (CCSprite *)child;
+		child->pauseSchedulerAndActions();
+	} //pause all scene childs
 
 	auto scene = PauseScene::create();
 	this->addChild(scene, 1);
-	
-	colorLayer->setOpacity(140);
 }
 
 void PlayGameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event)
@@ -270,7 +289,7 @@ void PlayGameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event)
 	
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
-		showDialogPause();
+		showDialogPause(this);
 		break;
 	}
 }

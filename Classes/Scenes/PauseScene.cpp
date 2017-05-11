@@ -39,10 +39,16 @@ void PauseScene::settingsSceneCallback(Ref* pSender)
 void PauseScene::resumeButtonCallback(Ref* pSender)
 {
 	auto parent = this->getParent();				
-	((PlayGameScene*)parent)->colorLayer->setOpacity(0); //danger
-	
+	((PlayGameScene*)parent)->colorLayer->setOpacity(0); //danger due to downcast
 	_eventDispatcher->resumeEventListenersForTarget(parent, true);
 	parent->removeChild(this);
+
+	Vector<Node*> childs = parent->getChildren();
+	for (auto child : childs)
+	{
+		CCSprite *sprite = (CCSprite *)child;
+		child->resumeSchedulerAndActions();
+	}
 }
 
 void PauseScene::menuButtonCallback(Ref* pSender)

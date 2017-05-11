@@ -15,11 +15,7 @@ bool SettingsScene::init()
 	}
 	drawUserInterface();
 	setDefaultUIState();
-
-	auto menu = Menu::createWithArray(MenuItems);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
-	return true;
+	return true;	
 }
 
 //========================================UI
@@ -30,8 +26,7 @@ void SettingsScene::drawUserInterface()
 	drawBGSoundCheckBox();
 	drawMusicVolumeSlider();
 	drawAIStateCheckBox();
-	drawBackButton();
-	drawApplyButton();
+	drawMenu();
 }
 
 void SettingsScene::drawBackground()
@@ -95,22 +90,18 @@ void SettingsScene::drawAIStateCheckBox()
 	this->addChild(AIEnabledCB, 1);
 }
 
-void SettingsScene::drawBackButton()
+void SettingsScene::drawMenu()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto backButton = UImanager::createButton("Back", ccc4(215, 255, 0, 255), CC_CALLBACK_1(SettingsScene::backButtonPressed, this),
-		Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 5)); 
-	MenuItems.pushBack(backButton);
-}
+	Vec2 menuPosition = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 5);
 
-void SettingsScene::drawApplyButton()
-{
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto applyButton = UImanager::createButton("Apply", ccc4(215, 255, 0, 255), CC_CALLBACK_1(SettingsScene::applyButtonPressed, this),
-		Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4)); 
-	MenuItems.pushBack(applyButton);
+	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
+	data->reserve(2);
+	data->push_back(new ButtonData("Back", CC_CALLBACK_1(SettingsScene::backButtonPressed, this)));
+	data->push_back(new ButtonData("Apply", CC_CALLBACK_1(SettingsScene::applyButtonPressed, this)));
+	auto menu = UImanager::createMenu(data, false, menuPosition);
+	this->addChild(menu, 1);
 }
 
 // Set UI state from config
