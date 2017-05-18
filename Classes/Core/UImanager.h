@@ -24,22 +24,23 @@ class UImanager
 public:
 	static ui::LoadingBar* createLoadingBar(const Vec2 &loadingBarPosition)
 	{
-		auto loadingBar = ui::LoadingBar::create("slider/slider-track-fill.png", 20);
+		auto loadingBar = ui::LoadingBar::create("slider/slider-track-fill.png", 0);
 		loadingBar->setDirection(ui::LoadingBar::Direction::LEFT);
 		loadingBar->setPosition(loadingBarPosition);
 		return loadingBar;
 	}
 	
-	static cocos2d::Sprite* createBackground(	const std::string &pathToImage,
-												const float scale)
+	static cocos2d::Sprite* createBackground(	const std::string &pathToImage)
 	{
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		auto origin = Director::getInstance()->getVisibleOrigin();
+		auto winSize = Director::getInstance()->getWinSize();
 
 		auto backgroundImage = Sprite::create(pathToImage);
 		backgroundImage->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2)); 
 		//background position at the center of the screen
-		backgroundImage->setScale(scale);
+		backgroundImage->setScaleX(winSize.width / backgroundImage->getBoundingBox().size.width);
+		backgroundImage->setScaleY(winSize.height / backgroundImage->getBoundingBox().size.height);
 		return backgroundImage;
 	}
 
@@ -48,7 +49,7 @@ public:
 												const cocos2d::ccMenuCallback &callback, 
 												const Vec2 &position)
 	{
-		auto label = Label::createWithTTF(text, BUTTON_LABEL_FONT, BUTTON_LABEL_SIZE);
+		auto label = Label::createWithTTF(text, BUTTON_LABEL_FONT, Director::getInstance()->getVisibleSize().height / 15);
 		label->setTextColor(textColor);
 		auto button = MenuItemLabel::create(label, callback);
 		button->setPosition(position);

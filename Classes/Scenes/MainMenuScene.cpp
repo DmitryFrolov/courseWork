@@ -32,7 +32,7 @@ void MainMenuScene::createMenuButtons()
 //==============================Background
 void MainMenuScene::createBackground()
 {
-	auto backgroundImage = UImanager::createBackground(MAIN_MENU_BACKROUND_IMAGE, 2);
+	auto backgroundImage = UImanager::createBackground(MAIN_MENU_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);
 }
 

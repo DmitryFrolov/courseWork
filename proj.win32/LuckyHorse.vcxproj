@@ -147,6 +147,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Core\AudioManager.cpp" />
+    <ClCompile Include="..\Classes\Core\Settings.cpp" />
     <ClCompile Include="..\Classes\Core\SettingsConfRW.cpp" />
     <ClCompile Include="..\Classes\GameObjects\ChessBoard.cpp" />
     <ClCompile Include="..\Classes\GameObjects\Figure.cpp" />
@@ -162,6 +163,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Core\AudioManager.h" />
     <ClInclude Include="..\Classes\Core\config.h" />
+    <ClInclude Include="..\Classes\Core\Settings.h" />
     <ClInclude Include="..\Classes\Core\SettingsConfRW.h" />
     <ClInclude Include="..\Classes\Core\UImanager.h" />
     <ClInclude Include="..\Classes\GameObjects\ChessBoard.h" />

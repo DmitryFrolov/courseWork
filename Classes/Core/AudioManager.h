@@ -8,14 +8,13 @@ class AudioManager
 {
 private:
 	int			background_audioID;
-	bool				 _playing;
+	bool				  _playing;
 
-	AudioManager()
+	AudioManager() 
+		: _playing(false)
+		, background_audioID(NULL)
 	{
-		_playing = false;
-		background_audioID = NULL;
 	} 
-	~AudioManager() {}
 
 	AudioManager(AudioManager const&) = delete;
 	AudioManager& operator= (AudioManager const&) = delete;

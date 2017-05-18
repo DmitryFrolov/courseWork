@@ -13,7 +13,7 @@ public:
 		std::ifstream in(fname.c_str());
 		std::string s, f1, f2, f3;
 
-		s = "";
+		s.clear();
 		while (std::getline(in, s)) {
 			std::istringstream iss(s);
 			if (iss >> f1 >> f2 >> f3 && f1 == key) {

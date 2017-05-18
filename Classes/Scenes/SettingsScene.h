@@ -5,6 +5,8 @@
 #include "MainMenuScene.h"
 #include <ui/CocosGUI.h>
 #include "Core/SettingsConfRW.h"
+#include "Core/Settings.h"
+
 USING_NS_CC;
 using namespace ui;
 
@@ -17,16 +19,16 @@ class SettingsScene : public cocos2d::Layer
 private:
 	Slider							  *volumeSlider;
 	CheckBox							 *bgSoundCB;
-	CheckBox						   *AIEnabledCB;
+	CheckBox						   *aiEnabledCB;
 public:
 	//=============================SceneCreators
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 	CREATE_FUNC(SettingsScene);
-	//=============================
-	void drawBackground();
+
 	//=============================UI Elements	
 	void drawUserInterface();
+	void drawBackground();
 	void drawBGSoundCheckBox();
 	void drawAIStateCheckBox();
 	void drawMenu();

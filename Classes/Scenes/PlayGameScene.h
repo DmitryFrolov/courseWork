@@ -4,15 +4,12 @@
 #include "Classes\Scenes\PauseScene.h"
 #include "Classes\Scenes\GameResultScene.h"
 #include "Core\UImanager.h"
-#include "Core\SettingsConfRW.h"
+#include "Core\Settings.h"
 #include "GameObjects\ChessBoard.h"
 #include "GameObjects\Figure.h"
 USING_NS_CC;
 
-#define AI_ENABLED				true
 #define AI_ONLY					false
-#define CELLS_AMOUNT_IN_A_ROW	8
-#define CELL_MAX_WEIGHT			99
 #define ANIMATION_LENGHT		1
 #define CHESS_BACKROUND_IMAGE	"backgrounds/chess-background.jpg"
 
@@ -21,15 +18,15 @@ enum TurnState {_PLAYER_1_TURN_, _PLAYER_2_TURN_};
 class PlayGameScene : public Layer
 {
 private:
-	Figure* playableFigure;
-	ChessBoard* chessBoard;
-	std::vector<std::vector<Cell*>> cells;
-	TurnState currentTurn;
-	int player1Score, player2Score;
-	Label* player1ScoreLabel;
-	Label* player2ScoreLabel;
+	Figure*					playableFigure;
+	ChessBoard*					chessBoard;
+	std::vector<std::vector<Cell*>>	 cells;
+	TurnState				   currentTurn;
+	int			player1Score, player2Score;
+	Label*				 player1ScoreLabel;
+	Label*				 player2ScoreLabel;
 public:
-	LayerColor* colorLayer;
+
 	CREATE_FUNC(PlayGameScene);
 	virtual bool init();
 	static Scene* createScene();

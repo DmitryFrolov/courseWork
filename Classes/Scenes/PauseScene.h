@@ -8,14 +8,14 @@ USING_NS_CC;
 
 class PauseScene : public Layer
 {
+private:
+	Layer *blacklightLayer;
 public:
-	PauseScene(void) {}
-	~PauseScene(void) {}
-
 	CREATE_FUNC(PauseScene);
 	static Scene* createScene();
 	virtual bool init();
 	void createButtons();
+	void createBlacklightLayer();
 	void settingsSceneCallback(Ref* pSender);
 	void resumeButtonCallback(Ref* pSender);
 	void menuButtonCallback(Ref* pSender);

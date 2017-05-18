@@ -1,18 +1,13 @@
 #include "Figure.h"
 
-Figure::Figure(Vec2 _initialPosition, Vec2B _initOnBoard)
+Figure::Figure(Vec2 _initialPosition, float scale, Vec2B _initOnBoard = Vec2(0,0))
 {
 	figure = Sprite::create("horse.png");
 	figure->setPosition(_initialPosition);
-	figure->setScale(0.5);					//	CELLS_AMOUNT/16
+	figure->setScale(scale);					
 
-	horseOnBoard = _initOnBoard;
-	horseReleased = true;
-}
-
-
-Figure::~Figure()
-{
+	figureOnBoard = _initOnBoard;
+	figureReleased = true;
 }
 
 Sprite* Figure::getSprite()
@@ -29,3 +24,22 @@ bool Figure::isTargetCoordsValid(Vec2B targetCoordinate, Vec2B figurePositionOnB
 	return false;
 }
 
+bool Figure::getFigureReleased()
+{
+	return figureReleased;
+}
+
+void Figure::setFigureReleased(bool isReleased) 
+{
+	figureReleased = isReleased;
+}
+
+Vec2B Figure::getFigureOnBoard()
+{
+	return figureOnBoard;
+}
+
+void Figure::setFigureOnBoard(Vec2B posOnBoard)
+{
+	figureOnBoard = posOnBoard;
+}

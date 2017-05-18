@@ -54,7 +54,7 @@ void ChessBoard::create()
 
 Label* ChessBoard::createScoreLabel(int score, Vec2 position) 
 {
-	Label *label = Label::createWithTTF(std::to_string(score), "fonts/Enchanted Land cyr-lat.ttf", 60);
+	Label *label = Label::createWithTTF(std::to_string(score), "fonts/Enchanted Land cyr-lat.ttf", 3.0 / 4 * cellSideSize);
 	label->setPosition(position);
 	label->setTextColor(ccc4(0, 255, 0, 255));
 	return label;
@@ -100,7 +100,6 @@ Vec2B ChessBoard::ConvertVec2toVec2B(Vec2 truePosition)
 
 bool ChessBoard::isPositionBelongsToBoard(Vec2 position)
 {
-	auto BoardSideSize = visibleSize.height * 8 / 9;
 	return (position.x >= LeftUpperBoardPoint.x &&
 		position.x <= LeftUpperBoardPoint.x + BoardSideSize &&
 		position.y  < LeftUpperBoardPoint.y &&

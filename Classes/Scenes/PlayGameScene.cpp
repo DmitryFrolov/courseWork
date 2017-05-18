@@ -37,37 +37,32 @@ void PlayGameScene::drawGameObjects()
 	drawBoard();
 	drawFigure();
 	drawPlayerScoreLabels();
-
-	auto visbleSize = Director::getInstance()->getVisibleSize();
-	auto color = new LayerColor();
-	colorLayer = color->create(ccc4(0, 0, 0, 0), visbleSize.width, visbleSize.height);
-	colorLayer->ignoreAnchorPointForPosition(false);
-	colorLayer->setPosition(Vec2(visbleSize.width / 2, visbleSize.height / 2));
-	this->addChild(colorLayer);
 }
 
 void PlayGameScene::drawBoard() 
 {
-	chessBoard = new ChessBoard(CELLS_AMOUNT_IN_A_ROW, CELL_MAX_WEIGHT);
+	chessBoard = new ChessBoard(Settings::getInstance().getAmountOfCellsInARow(), Settings::getInstance().getCellMaxWeight());
 	chessBoard->create();
 	cells = *chessBoard->getCells();
 	
 	for (auto &row : cells)
 		for (auto &cell : row) {
 			this->addChild(cell->cellNode, -1);
-			this->addChild(cell->scoreLabel, 0, "text_label");
+			this->addChild(cell->scoreLabel, 0);
 		}
 }
 
 void PlayGameScene::drawBackground()
 {
-	auto backgroundImage = UImanager::createBackground(CHESS_BACKROUND_IMAGE, 2);
+	auto backgroundImage = UImanager::createBackground(CHESS_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -2);
 }
 
 void PlayGameScene::drawFigure()
 {
-	playableFigure = new Figure(cells.at(0).at(0)->centerCoordinate);
+	playableFigure = new Figure(cells.at(0).at(0)->centerCoordinate, 
+		Director::getInstance()->getVisibleSize().height / (250 * Settings::getInstance().getAmountOfCellsInARow()),
+		Vec2(0, 0));
 	this->addChild(playableFigure->getSprite(), 0);
 }
 
@@ -77,20 +72,18 @@ void PlayGameScene::drawPlayerScoreLabels()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 
 	player1ScoreLabel = Label::createWithTTF("Player 1 score: " + std::to_string(player1Score),
-		"fonts/Enchanted Land cyr-lat.ttf", 70);
-	player1ScoreLabel->setAnchorPoint(Vec2(0, 0.5));
-	player1ScoreLabel->setPosition(Vec2(origin.x + visibleSize.width / 15,
-		origin.y + visibleSize.height * 9 / 10));
+		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
+	player1ScoreLabel->setPosition(Vec2(origin.x + player1ScoreLabel->getBoundingBox().size.width / 1.3,
+										origin.y + visibleSize.height - player1ScoreLabel->getBoundingBox().size.height * 1.5));
 	player1ScoreLabel->setTextColor(ccc4(0, 255, 0, 255));
-	this->addChild(player1ScoreLabel, 0, "text_label");
 
 	player2ScoreLabel = Label::createWithTTF("Player 2 score: " + std::to_string(player2Score),
-		"fonts/Enchanted Land cyr-lat.ttf", 70);
-	player2ScoreLabel->setAnchorPoint(Vec2(1, 0.5));
-	player2ScoreLabel->setPosition(Vec2(origin.x + visibleSize.width * 14 / 15,
-		origin.y + visibleSize.height * 9 / 10));
+		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
+	player2ScoreLabel->setPosition(Vec2(origin.x + visibleSize.width - player2ScoreLabel->getBoundingBox().size.width / 1.3,
+										origin.y + visibleSize.height - player2ScoreLabel->getBoundingBox().size.height * 1.5));
 	player2ScoreLabel->setTextColor(ccc4(0, 255, 0, 255));
-	this->addChild(player2ScoreLabel, 0, "text_label");
+	this->addChild(player1ScoreLabel, 0);
+	this->addChild(player2ScoreLabel, 0);
 }
 
 void PlayGameScene::drawPauseButton()
@@ -99,9 +92,10 @@ void PlayGameScene::drawPauseButton()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 
 	auto closeItem = MenuItemImage::create("settings-icon.png", "settings-icon.png", CC_CALLBACK_1(PlayGameScene::showDialogPause, this));
-	closeItem->setScale(0.1);
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width *  closeItem->getScaleX() / 2, 
-												    origin.y + closeItem->getContentSize().height * closeItem->getScaleY() / 2));
+	closeItem->setScale(visibleSize.height / 8000);
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getBoundingBox().size.width / 2, 
+											    origin.y + closeItem->getBoundingBox().size.height / 2));
+
 	auto menu = Menu::create(closeItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
@@ -112,7 +106,7 @@ void PlayGameScene::onMouseUp(Event *event)
 {
 	//debug
 	if (AI_ONLY) {
-		if (playableFigure->horseReleased)
+		if (playableFigure->getFigureReleased())
 			runMainGameSequence((Sprite*)playableFigure->getSprite());
 	}
 	else {
@@ -120,12 +114,12 @@ void PlayGameScene::onMouseUp(Event *event)
 		Vec2 cursorPosition = Vec2(mEvent->getCursorX(), mEvent->getCursorY());
 		
 		if ((mEvent->getMouseButton() == MOUSE_BUTTON_LEFT) && chessBoard->isPositionBelongsToBoard(cursorPosition)
-			&& playableFigure->horseReleased && 
+			&& playableFigure->getFigureReleased() && 
 			cells.at(chessBoard->ConvertVec2toVec2B(cursorPosition).x).at(chessBoard->ConvertVec2toVec2B(cursorPosition).y)->scoreWeight != 0 &&
-			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->horseOnBoard))
+			playableFigure->isTargetCoordsValid(chessBoard->ConvertVec2toVec2B(cursorPosition), playableFigure->getFigureOnBoard()))
 		{ 
-			playableFigure->horseOnBoard = chessBoard->ConvertVec2toVec2B(cursorPosition);
-			playableFigure->horseReleased = false;
+			playableFigure->setFigureOnBoard(chessBoard->ConvertVec2toVec2B(cursorPosition));
+			playableFigure->setFigureReleased(false);
 			runMainGameSequence(playableFigure->getSprite(), getNearestCellCenterCoordinates(cursorPosition) );
 		}
 	}
@@ -140,9 +134,9 @@ Vec2 PlayGameScene::getNearestCellCenterCoordinates(Vec2 coordinate)
 void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 {
 	auto acMoveTo = MoveTo::create(ANIMATION_LENGHT, moveto);
-	auto releaseHorse = CallFunc::create([this]() { playableFigure->horseReleased = true; });
+	auto releaseHorse = CallFunc::create([this]() { playableFigure->setFigureReleased(true); });
 	auto upgradeScore = CallFunc::create([this]() {
-		auto currentCell = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y);
+		auto currentCell = cells.at(playableFigure->getFigureOnBoard().x).at(playableFigure->getFigureOnBoard().y);
 		int scoreToAdd = currentCell->scoreWeight;
 		if (scoreToAdd != 0) {
 			currentCell->scoreWeight = 0;
@@ -188,9 +182,9 @@ void PlayGameScene::runMainGameSequence(Sprite *obj, Vec2 moveto)
 
 void PlayGameScene::runMainGameSequence(Sprite *obj)//overload for ai vs ai debug only
 { 
-	auto switchHorse = CallFunc::create([this]() {	playableFigure->horseReleased = !playableFigure->horseReleased; });
+	auto switchHorse = CallFunc::create([this]() {	playableFigure->setFigureReleased(!playableFigure->getFigureReleased()); });
 	auto upgradeScore = CallFunc::create([this]() {
-		auto currnetCell = cells.at(playableFigure->horseOnBoard.x).at(playableFigure->horseOnBoard.y);
+		auto currnetCell = cells.at(playableFigure->getFigureOnBoard().x).at(playableFigure->getFigureOnBoard().y);
 		int scoreToAdd = currnetCell->scoreWeight;
 		if (scoreToAdd != 0) {
 			currnetCell->scoreWeight = 0;
@@ -222,13 +216,15 @@ void PlayGameScene::runMainGameSequence(Sprite *obj)//overload for ai vs ai debu
 void PlayGameScene::aiPlay()
 {
 	auto available_cells = getAvailableCells();
-	int loop_worst_delta = CELL_MAX_WEIGHT, turn_worst_delta = -CELL_MAX_WEIGHT, target_cell_id = 0;
-	for (int iteratorAvailable = 0; iteratorAvailable < available_cells->size(); ++iteratorAvailable)
+	int loop_worst_delta = Settings::getInstance().getCellMaxWeight(), 
+		turn_worst_delta = -Settings::getInstance().getCellMaxWeight(), 
+		target_cell_id = 0;
+	for (size_t iteratorAvailable = 0; iteratorAvailable < available_cells->size(); ++iteratorAvailable)
 	{
 		for (auto &row : cells)															//check enemy available moves
 			for (auto &cell : row)
 				if (playableFigure->isTargetCoordsValid(cell->coordinatesInTab, available_cells->at(iteratorAvailable).coordinatesInTab)			
-					&& cell->coordinatesInTab != playableFigure->horseOnBoard)			//and target position != current figure position
+					&& cell->coordinatesInTab != playableFigure->getFigureOnBoard())			//and target position != current figure position
 					if (available_cells->at(iteratorAvailable).scoreWeight != 0 && cell->scoreWeight != 0) {	//not plot a route through 0-value cells
 						//cells where the opponent's passage is possible
 						int current_delta = available_cells->at(iteratorAvailable).scoreWeight - cell->scoreWeight;
@@ -239,9 +235,9 @@ void PlayGameScene::aiPlay()
 			target_cell_id = iteratorAvailable;
 			turn_worst_delta = loop_worst_delta;
 		}
-		loop_worst_delta = CELL_MAX_WEIGHT;
+		loop_worst_delta = Settings::getInstance().getCellMaxWeight();
 	}
-	playableFigure->horseOnBoard = available_cells->at(target_cell_id).coordinatesInTab;
+	playableFigure->setFigureOnBoard(available_cells->at(target_cell_id).coordinatesInTab);
 	auto acMoveTo = MoveTo::create(ANIMATION_LENGHT, available_cells->at(target_cell_id).centerCoordinate);
 	playableFigure->getSprite()->runAction(acMoveTo);
 }
@@ -249,12 +245,12 @@ void PlayGameScene::aiPlay()
 std::vector<Cell> *PlayGameScene::getAvailableCells()
 {
 	std::vector<Cell> *available_cells = new std::vector<Cell>();
-	available_cells->reserve(8);
+	available_cells->reserve(8);  //8 - maximum available for turn cell in case of knight figure
 
 	for (auto &row : cells)
 		for (auto &cell : row)
 		{
-			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->horseOnBoard)) {
+			if (cell->scoreWeight > 0 && playableFigure->isTargetCoordsValid(cell->coordinatesInTab, playableFigure->getFigureOnBoard())) {
 				available_cells->push_back(*cell);
 			}
 		}
@@ -267,11 +263,9 @@ void PlayGameScene::endGameScene()
 	Director::getInstance()->replaceScene(scene);
 }
 
-//pause
 void PlayGameScene::showDialogPause(Ref* pSender)
 {
 	_eventDispatcher->pauseEventListenersForTarget(this, true);
-	colorLayer->setOpacity(140);
 	Vector<Node*> childs = this->getChildren();
 	for( auto child : childs)
 	{

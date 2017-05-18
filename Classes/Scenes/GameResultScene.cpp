@@ -27,7 +27,7 @@ bool GameResultScene::init()
 
 void GameResultScene::drawBackground()
 {
-	auto backgroundImage = UImanager::createBackground(RESULT_BACKROUND_IMAGE, 2);
+	auto backgroundImage = UImanager::createBackground(RESULT_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);
 }
 
@@ -37,20 +37,18 @@ void GameResultScene::drawPlayerResultLabels()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 
 	auto player1Result = Label::createWithTTF("Player 1 score: " + std::to_string(p1Score),
-		"fonts/Enchanted Land cyr-lat.ttf", 70);
-	player1Result->setAnchorPoint(Vec2(0, 0.5));
-	player1Result->setPosition(Vec2(origin.x + visibleSize.width / 15,
-		origin.y + visibleSize.height * 9 / 10));
+		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
+	player1Result->setPosition(Vec2(origin.x + player1Result->getBoundingBox().size.width / 1.3,
+										origin.y + visibleSize.height - player1Result->getBoundingBox().size.height * 1.5));
 	player1Result->setTextColor(ccc4(0, 255, 0, 255));
-	this->addChild(player1Result, 0, "text_label");
 
 	auto player2Result = Label::createWithTTF("Player 2 score: " + std::to_string(p2Score),
-		"fonts/Enchanted Land cyr-lat.ttf", 70);
-	player2Result->setAnchorPoint(Vec2(1, 0.5));
-	player2Result->setPosition(Vec2(origin.x + visibleSize.width * 14 / 15,
-		origin.y + visibleSize.height * 9 / 10));
+		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
+	player2Result->setPosition(Vec2(origin.x + visibleSize.width - player2Result->getBoundingBox().size.width / 1.3,
+										origin.y + visibleSize.height - player2Result->getBoundingBox().size.height * 1.5));
 	player2Result->setTextColor(ccc4(0, 255, 0, 255));
-	this->addChild(player2Result, 0, "text_label");
+	this->addChild(player1Result, 0);
+	this->addChild(player2Result, 0);
 }
 
 void GameResultScene::drawWinnerLabel()
@@ -67,16 +65,15 @@ void GameResultScene::drawWinnerLabel()
 		result = "Draw. Wow!";
 
 	auto center = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
-	auto winnnerLabel = UImanager::createTextLabel(result, "fonts/Enchanted Land cyr-lat.ttf", 70, center);
-	winnnerLabel->setAnchorPoint(Vec2(0.5, 0.5));
-	this->addChild(winnnerLabel, 0, "text_label");
+	auto winnnerLabel = UImanager::createTextLabel(result, "fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 10, center);
+	this->addChild(winnnerLabel, 0);
 }
 
 void GameResultScene::drawMenu()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto menuCenter = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4);
+	auto menuCenter = Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 6);
 	
 	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
 	data->reserve(3);

@@ -14,8 +14,9 @@ bool LoadingFrame::init()
 	{
 		return false;
 	}
-	applyDefaults();
 	createInterface();
+	loadingBar->setPercent(50);
+	applyDefaults();
 	this->schedule(schedule_selector(LoadingFrame::runMainMenuScene), 0.5f);
 	loadingBar->setPercent(100);
 	return true;
@@ -29,7 +30,7 @@ void LoadingFrame::createInterface()
 	loadingBar = UImanager::createLoadingBar(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(loadingBar);
-	auto backgroundImage = UImanager::createBackground(LOADING_FRAME_BACKROUND_IMAGE, 1.1);
+	auto backgroundImage = UImanager::createBackground(LOADING_FRAME_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);
 }
 
@@ -43,13 +44,23 @@ void LoadingFrame::runMainMenuScene(float dt)
 void LoadingFrame::applyDefaults()
 {
 	applyBGMPlaying();
+	applyAIOpponentState();
 }
 
 void LoadingFrame::applyBGMPlaying()
 {
 	if (SettingsConfRW::readBGMusicPlaying() == 1) //if BGM playing in conf
 	{
+		float volume = SettingsConfRW::readBGMusicVolume();
 		AudioManager::getInstance().playBackgroundAudio();  //play BGM
-		AudioManager::getInstance().setBackgroundAudioVolume(SettingsConfRW::readBGMusicVolume());  //set volume
+		AudioManager::getInstance().setBackgroundAudioVolume(volume); 
+		
+		Settings::getInstance().setBackgroundAudioEnabledState(true); //writeToSingleton
+		Settings::getInstance().setBackgroundAudioVolumeValue(volume);
 	}
+}
+
+void LoadingFrame::applyAIOpponentState()
+{
+	Settings::getInstance().setAIOpponentEnabled(SettingsConfRW::readAIEnabled());
 }

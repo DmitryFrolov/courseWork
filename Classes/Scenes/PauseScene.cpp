@@ -15,6 +15,8 @@ bool PauseScene::init()
 		return false;
 	}
 	createButtons();
+	createBlacklightLayer();
+	
 	return true;
 }
 
@@ -30,6 +32,17 @@ void PauseScene::createButtons()
 	this->addChild(menu, 1);
 }
 
+void PauseScene::createBlacklightLayer()
+{
+	auto winSize = Director::getInstance()->getWinSize();
+	auto color = new LayerColor();
+	blacklightLayer = color->create(ccc4(0, 0, 0, 0), winSize.width, winSize.height);
+	blacklightLayer->ignoreAnchorPointForPosition(false);
+	blacklightLayer->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	blacklightLayer->setOpacity(140);
+	this->addChild(blacklightLayer, -1);
+}
+
 void PauseScene::settingsSceneCallback(Ref* pSender)
 {
 	auto scene = SettingsScene::createScene();
@@ -38,17 +51,17 @@ void PauseScene::settingsSceneCallback(Ref* pSender)
 
 void PauseScene::resumeButtonCallback(Ref* pSender)
 {
-	auto parent = this->getParent();				
-	((PlayGameScene*)parent)->colorLayer->setOpacity(0); //danger due to downcast
+	auto parent = this->getParent();
+	blacklightLayer->setOpacity(0);
 	_eventDispatcher->resumeEventListenersForTarget(parent, true);
-	parent->removeChild(this);
-
+	
 	Vector<Node*> childs = parent->getChildren();
 	for (auto child : childs)
 	{
 		CCSprite *sprite = (CCSprite *)child;
 		child->resumeSchedulerAndActions();
 	}
+	parent->removeChild(this);
 }
 
 void PauseScene::menuButtonCallback(Ref* pSender)

@@ -26,6 +26,7 @@ public:
 	//=================applyDefaults
 	void applyDefaults();
 	void applyBGMPlaying();
+	void applyAIOpponentState();
 
 };
 

@@ -31,7 +31,7 @@ void SettingsScene::drawUserInterface()
 
 void SettingsScene::drawBackground()
 {
-	auto backgroundImage = UImanager::createBackground(SETTINGS_BACKROUND_IMAGE, 0.9f);
+	auto backgroundImage = UImanager::createBackground(SETTINGS_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);
 }
 
@@ -84,10 +84,10 @@ void SettingsScene::drawAIStateCheckBox()
 		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2,
 		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10 - 140));
 
-	AIEnabledCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
+	aiEnabledCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
 
 	this->addChild(textLabel, 1);
-	this->addChild(AIEnabledCB, 1);
+	this->addChild(aiEnabledCB, 1);
 }
 
 void SettingsScene::drawMenu()
@@ -107,22 +107,22 @@ void SettingsScene::drawMenu()
 // Set UI state from config
 void SettingsScene::setDefaultUIState()
 {
-	bgSoundCB->setSelectedState(SettingsConfRW::readBGMusicPlaying());
-	volumeSlider->setPercent(SettingsConfRW::readBGMusicVolume() * 100);
-	AIEnabledCB->setSelectedState(SettingsConfRW::readAIEnabled());
+	bgSoundCB->setSelectedState(Settings::getInstance().getBackgroundAudioEnabled());
+	volumeSlider->setPercent(Settings::getInstance().getBackgroundAudioVolume() * 100);
+	aiEnabledCB->setSelectedState(Settings::getInstance().getAIOpponentEnabled());
 }
 
 //======================================Callbacks
 
 void SettingsScene::backButtonPressed(Ref* pSender)
 {
-	if (SettingsConfRW::readBGMusicPlaying() == true) {					//if BGM should be played
+	if (Settings::getInstance().getBackgroundAudioEnabled() == true) {					//if BGM should be played
 		if (!AudioManager::getInstance().isBackgroundMusicPlaying()) {  //but not playing 
 			AudioManager::getInstance().playBackgroundAudio();		    //play it and set volume to config level
-			AudioManager::getInstance().setBackgroundAudioVolume(SettingsConfRW::readBGMusicVolume());
+			AudioManager::getInstance().setBackgroundAudioVolume(Settings::getInstance().getBackgroundAudioVolume());
 		}
 		else {														    //and playing -> set volume to config level		
-			AudioManager::getInstance().setBackgroundAudioVolume(SettingsConfRW::readBGMusicVolume());
+			AudioManager::getInstance().setBackgroundAudioVolume(Settings::getInstance().getBackgroundAudioVolume());
 		}
 	}
 	else {																//if should not be played
@@ -136,8 +136,11 @@ void SettingsScene::backButtonPressed(Ref* pSender)
 //set values from UI to config
 void SettingsScene::applyButtonPressed(Ref* pSender)
 {
-	SettingsConfRW::writeBGMusicPlaying(bgSoundCB->isSelected());
+	SettingsConfRW::writeBGMusicPlaying(bgSoundCB->isSelected());   //write to config
 	SettingsConfRW::writeBGMusicVolume(volumeSlider->getPercent() / 100.f);
+	SettingsConfRW::writeAIEnabled(aiEnabledCB->isSelected());
 
-	SettingsConfRW::writeAIEnabled(AIEnabledCB->isSelected());
+	Settings::getInstance().setBackgroundAudioEnabledState(bgSoundCB->isSelected()); //writeToSingleton
+	Settings::getInstance().setBackgroundAudioVolumeValue(volumeSlider->getPercent() / 100.f);
+	Settings::getInstance().setAIOpponentEnabled(aiEnabledCB->isSelected());
 }
