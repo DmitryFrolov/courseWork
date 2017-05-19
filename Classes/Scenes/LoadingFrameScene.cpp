@@ -17,7 +17,7 @@ bool LoadingFrame::init()
 	createInterface();
 	loadingBar->setPercent(50);
 	applyDefaults();
-	this->schedule(schedule_selector(LoadingFrame::runMainMenuScene), 0.5f);
+	this->schedule(schedule_selector(LoadingFrame::runMainMenuScene), 1.f);
 	loadingBar->setPercent(100);
 	return true;
 }
@@ -29,6 +29,7 @@ void LoadingFrame::createInterface()
 
 	loadingBar = UImanager::createLoadingBar(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
+	loadingBar->setScale(Director::getInstance()->getWinSize().height / 600);
 	this->addChild(loadingBar);
 	auto backgroundImage = UImanager::createBackground(LOADING_FRAME_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);

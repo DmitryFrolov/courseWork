@@ -40,10 +40,12 @@ void SettingsScene::drawBGSoundCheckBox()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto textLabel = UImanager::createTextLabel("Background sound enabled",
-		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2,
-		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10));
+		SETTINGS_LABEL_FONT, visibleSize.height / 20, Vec2::ZERO);
+	textLabel->setPosition(Vec2(origin.x + textLabel->getBoundingBox().size.width / 1.3,
+		origin.y + visibleSize.height - textLabel->getBoundingBox().size.height * 2.5));
 
-	bgSoundCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
+	bgSoundCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(textLabel->getBoundingBox().size.height * 8, 6) , 
+		Director::getInstance()->getWinSize().height / 18000);
 	bgSoundCB->addEventListener([&](Ref* sender, CheckBox::EventType type) {
 		if (type == CheckBox::EventType::SELECTED) {
 			AudioManager::getInstance().playBackgroundAudio();
@@ -62,10 +64,12 @@ void SettingsScene::drawMusicVolumeSlider()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto sliderLabel = UImanager::createTextLabel("Background sound volume",
-		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2, 
-		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10 - 70));
+		SETTINGS_LABEL_FONT, visibleSize.height / 20, Vec2::ZERO);
+	sliderLabel->setPosition(Vec2(origin.x + sliderLabel->getBoundingBox().size.width / 1.3,
+		origin.y + visibleSize.height - sliderLabel->getBoundingBox().size.height * 5));
 
-	volumeSlider = UImanager::createSlider(sliderLabel->getPosition() + Vec2(sliderLabel->getContentSize().width + 20, 0));	
+	volumeSlider = UImanager::createSlider(Vec2(bgSoundCB->getPosition().x, sliderLabel->getPosition().y),
+		Director::getInstance()->getWinSize().height / 600);
 	volumeSlider->addEventListener([&](Ref* sender, Slider::EventType type) 
 	{
 		if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
@@ -81,10 +85,12 @@ void SettingsScene::drawAIStateCheckBox()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	
 	auto textLabel = UImanager::createTextLabel("AI opponent enabled",
-		SETTINGS_LABEL_FONT, SETTINGS_LABEL_SIZE / 2,
-		Vec2(origin.x + visibleSize.width * 1.5 / 10, origin.y + visibleSize.height * 8 / 10 - 140));
+		SETTINGS_LABEL_FONT, visibleSize.height / 20, Vec2::ZERO);
+	textLabel->setPosition(Vec2(origin.x + textLabel->getBoundingBox().size.width / 1.3,
+		origin.y + visibleSize.height - textLabel->getBoundingBox().size.height * 7.5));
 
-	aiEnabledCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(220, 6), 0.03f);
+	aiEnabledCB = UImanager::createCheckBox(Vec2(bgSoundCB->getPosition().x, textLabel->getPosition().y),
+		Director::getInstance()->getWinSize().height / 18000);
 
 	this->addChild(textLabel, 1);
 	this->addChild(aiEnabledCB, 1);
@@ -116,7 +122,7 @@ void SettingsScene::setDefaultUIState()
 
 void SettingsScene::backButtonPressed(Ref* pSender)
 {
-	if (Settings::getInstance().getBackgroundAudioEnabled() == true) {					//if BGM should be played
+	if (Settings::getInstance().getBackgroundAudioEnabled() == true) {	//if BGM should be played
 		if (!AudioManager::getInstance().isBackgroundMusicPlaying()) {  //but not playing 
 			AudioManager::getInstance().playBackgroundAudio();		    //play it and set volume to config level
 			AudioManager::getInstance().setBackgroundAudioVolume(Settings::getInstance().getBackgroundAudioVolume());
