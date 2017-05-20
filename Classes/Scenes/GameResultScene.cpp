@@ -77,32 +77,19 @@ void GameResultScene::drawMenu()
 	
 	std::vector<ButtonData*> *data = new std::vector<ButtonData*>;
 	data->reserve(3);
-	data->push_back(new ButtonData("Again", CC_CALLBACK_1(GameResultScene::playGameCallback, this)));
-	data->push_back(new ButtonData("To menu", CC_CALLBACK_1(GameResultScene::menuCallback, this)));
-	data->push_back(new ButtonData("Exit", CC_CALLBACK_1(GameResultScene::exitCallback, this)));
+	data->push_back(new ButtonData("Again", [](Ref* sender) {
+		auto scene = PlayGameScene::createScene();
+		Director::getInstance()->replaceScene(scene);
+	}));
+	data->push_back(new ButtonData("To menu", [](Ref* sender) {
+		auto scene = MainMenuScene::createScene();
+		Director::getInstance()->replaceScene(scene);
+	}));
+	data->push_back(new ButtonData("Exit", [](Ref* sender) {
+		AudioManager::getInstance().endAudio();
+		Director::getInstance()->end();
+		exit(0);
+	}));
 	auto menu = UImanager::createMenu(data, false, menuCenter);
 	this->addChild(menu, 1);
-}
-
-void GameResultScene::playGameCallback(Ref* pSender)
-{
-	auto scene = PlayGameScene::createScene();
-	Director::getInstance()->replaceScene(scene);
-}
-
-void GameResultScene::menuCallback(Ref* pSender)
-{
-	auto scene = MainMenuScene::createScene();
-	Director::getInstance()->replaceScene(scene);
-}
-
-void GameResultScene::exitCallback(Ref* pSender)
-{
-	AudioManager::getInstance().endAudio();
-	Director::getInstance()->end();
-	exit(0);
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif   
 }

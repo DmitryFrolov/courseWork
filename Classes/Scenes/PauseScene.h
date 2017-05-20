@@ -16,10 +16,6 @@ public:
 	virtual bool init();
 	void createButtons();
 	void createBlacklightLayer();
-	void settingsSceneCallback(Ref* pSender);
-	void resumeButtonCallback(Ref* pSender);
-	void menuButtonCallback(Ref* pSender);
-	void exitButtonCallback(Ref* pSender);
 };
 
 #endif // _PAUSE_SCREEN_H_

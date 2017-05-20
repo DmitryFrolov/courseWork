@@ -21,8 +21,6 @@ public:
 	virtual bool init();
 	CREATE_FUNC(LoadingFrame);
 	void LoadingFrame::createInterface();
-	//=================changeScene
-	void runMainMenuScene(float dt);
 	//=================applyDefaults
 	void applyDefaults();
 	void applyBGMPlaying();

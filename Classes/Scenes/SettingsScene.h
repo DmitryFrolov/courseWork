@@ -11,7 +11,6 @@ USING_NS_CC;
 using namespace ui;
 
 #define SETTINGS_LABEL_FONT "fonts/Enchanted Land cyr-lat.ttf"
-#define SETTINGS_LABEL_SIZE 60
 #define SETTINGS_BACKROUND_IMAGE "backgrounds/settings-background.jpg"
 
 class SettingsScene : public cocos2d::Layer

@@ -17,7 +17,10 @@ bool LoadingFrame::init()
 	createInterface();
 	loadingBar->setPercent(50);
 	applyDefaults();
-	this->schedule(schedule_selector(LoadingFrame::runMainMenuScene), 1.f);
+	this->schedule([&](float dt) {
+		auto scene = MainMenuScene::createScene();
+		Director::getInstance()->replaceScene(MainMenuScene::createScene());
+	}, 1.f, 0, 0.f, "LFshedule");
 	loadingBar->setPercent(100);
 	return true;
 }
@@ -33,12 +36,6 @@ void LoadingFrame::createInterface()
 	this->addChild(loadingBar);
 	auto backgroundImage = UImanager::createBackground(LOADING_FRAME_BACKROUND_IMAGE);
 	this->addChild(backgroundImage, -1);
-}
-
-void LoadingFrame::runMainMenuScene(float dt)
-{
-	auto scene = MainMenuScene::createScene();
-	Director::getInstance()->replaceScene(MainMenuScene::createScene());
 }
 
 //=======================================apply defaults

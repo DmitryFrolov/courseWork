@@ -24,10 +24,6 @@ public:
 	void drawPlayerResultLabels();
 	void drawWinnerLabel();
 	void drawMenu();
-
-	void playGameCallback(Ref* pSender);
-	void menuCallback(Ref* pSender);
-	void exitCallback(Ref* pSender);
 };
 
 #endif //_GAME_RESULT_SCENE_H_

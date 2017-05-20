@@ -19,7 +19,6 @@ bool SettingsScene::init()
 }
 
 //========================================UI
-
 void SettingsScene::drawUserInterface()
 {
 	drawBackground();

@@ -45,7 +45,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		director->setOpenGLView(glview);
 	}
 
-	//director->setDisplayStats(true);
+	director->setDisplayStats(true);
 	director->setAnimationInterval(1.0f / 60);  //set fps
 
 												// Set the design resolution
