@@ -35,14 +35,17 @@ public:
 			std::getline(ifs, s); 
 			Vec.push_back(s); 
 		}
-
+		bool isFinded = false; //The key checking whether the overwrite was made
 		for (std::vector<std::string>::iterator it = Vec.begin(); it != Vec.end(); ++it) { //edit string
 			std::istringstream iss(*it);
 			if (iss >> f1 >> f2 >> f3 && f1 == key) {
 				*it = f1 + " " + f2 + " " + newValue;
+				isFinded = true;
 				break;
 			}
 		}
+		if (!isFinded)  //if key is not finded 
+			Vec.push_back(key + " = " + newValue); //add it with key
 		ifs.close();
 		std::ofstream ofs(fname.c_str());
 		for (std::vector<std::string>::iterator it = Vec.begin(); it != Vec.end(); ++it) { //write vector to file								
@@ -65,6 +68,5 @@ public:
 	{
 		return b ? "1" : "0";
 	}
-
 };
 #endif// _CONFIG_H_

@@ -1,9 +1,23 @@
 #include "SettingsConfRW.h"
-#include <io.h>
+const char* SettingsConfRW::CONFIG_PATH = "../Resources/config/settings.conf";
+
+void SettingsConfRW::createConfig() 
+{
+	std::ofstream ofs(CONFIG_PATH);
+	ofs.close();
+}
+
+bool SettingsConfRW::isConfigExists() 
+{
+	if ((_access(CONFIG_PATH, 06)) != -1) {
+		return true;
+	}
+	return false;
+}
 
 bool SettingsConfRW::readBGMusicPlaying()
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists()) {
 		std::string temp = dConf::getValueByKey(CONFIG_PATH, "is_background_music_playing");
 		return dConf::stringToBool(temp);
 	}
@@ -12,7 +26,7 @@ bool SettingsConfRW::readBGMusicPlaying()
 
 void SettingsConfRW::writeBGMusicPlaying(bool isPlaying)
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists()) {
 		std::string temp = dConf::boolToString(isPlaying);
 		dConf::setValueByKey(CONFIG_PATH, "is_background_music_playing", temp);
 	}
@@ -20,23 +34,23 @@ void SettingsConfRW::writeBGMusicPlaying(bool isPlaying)
 
 float SettingsConfRW::readBGMusicVolume()
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists()) {
 		std::string temp = dConf::getValueByKey(CONFIG_PATH, "background_music_volume");
 		return atof(temp.c_str());
 	}
 	return 1.0;
 }
 
-void SettingsConfRW::writeBGMusicVolume(float volume) 
+void SettingsConfRW::writeBGMusicVolume(float volume)
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists()) {
 		dConf::setValueByKey(CONFIG_PATH, "background_music_volume", std::to_string(volume));
 	}
 }
 
 bool SettingsConfRW::readAIEnabled()
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists()) {
 		std::string temp = dConf::getValueByKey(CONFIG_PATH, "is_ai_opponent_enabled");
 		return dConf::stringToBool(temp);
 	}
@@ -45,7 +59,7 @@ bool SettingsConfRW::readAIEnabled()
 
 void SettingsConfRW::writeAIEnabled(bool isEnabled)
 {
-	if (!(_access(CONFIG_PATH, 0) == -1)) {
+	if (isConfigExists) {
 		std::string temp = dConf::boolToString(isEnabled);
 		dConf::setValueByKey(CONFIG_PATH, "is_ai_opponent_enabled", temp);
 	}

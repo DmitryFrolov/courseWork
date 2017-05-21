@@ -15,13 +15,18 @@ bool LoadingFrame::init()
 		return false;
 	}
 	createInterface();
-	loadingBar->setPercent(50);
-	applyDefaults();
+	loadingBar->setPercent(75);
+
+	if (SettingsConfRW::isConfigExists())
+		applyDefaults();
+	else
+		SettingsConfRW::createConfig();
+
 	this->schedule([&](float dt) {
-		auto scene = MainMenuScene::createScene();
+		loadingBar->setPercent(100);
 		Director::getInstance()->replaceScene(MainMenuScene::createScene());
-	}, 1.f, 0, 0.f, "LFshedule");
-	loadingBar->setPercent(100);
+	}, 0.0, 0, 0.f, "LFshedule");
+
 	return true;
 }
 
@@ -51,8 +56,8 @@ void LoadingFrame::applyBGMPlaying()
 	{
 		float volume = SettingsConfRW::readBGMusicVolume();
 		AudioManager::getInstance().playBackgroundAudio();  //play BGM
-		AudioManager::getInstance().setBackgroundAudioVolume(volume); 
-		
+		AudioManager::getInstance().setBackgroundAudioVolume(volume);
+
 		Settings::getInstance().setBackgroundAudioEnabledState(true); //writeToSingleton
 		Settings::getInstance().setBackgroundAudioVolumeValue(volume);
 	}

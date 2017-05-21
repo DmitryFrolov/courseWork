@@ -3,13 +3,11 @@
 
 #include "cocos2d.h"
 #include "MainMenuScene.h"
-#include <ui/CocosGUI.h>
 #include "Core/SettingsConfRW.h"
 #include "Core/UImanager.h"
 #include "Core/AudioManager.h"
 
 #define LOADING_FRAME_BACKROUND_IMAGE "backgrounds/loading-frame-backgound.jpg"
-USING_NS_CC;
 
 class LoadingFrame : public cocos2d::Layer
 {
