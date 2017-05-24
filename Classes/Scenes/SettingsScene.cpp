@@ -43,14 +43,14 @@ void SettingsScene::drawBGSoundCheckBox()
 	textLabel->setPosition(Vec2(origin.x + textLabel->getBoundingBox().size.width / 1.3,
 		origin.y + visibleSize.height - textLabel->getBoundingBox().size.height * 2.5));
 
-	bgSoundCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(textLabel->getBoundingBox().size.height * 8, 6) , 
+	bgSoundCB = UImanager::createCheckBox(textLabel->getPosition() + Vec2(textLabel->getBoundingBox().size.height * 8, 6), 
 		Director::getInstance()->getWinSize().height / 18000);
-	bgSoundCB->addEventListener([&](Ref* sender, CheckBox::EventType type) {
-		if (type == CheckBox::EventType::SELECTED) {
+	bgSoundCB->addEventListener([&](Ref* sender, ui::CheckBox::EventType type) {
+		if (type == ui::CheckBox::EventType::SELECTED) {
 			AudioManager::getInstance().playBackgroundAudio();
 			AudioManager::getInstance().setBackgroundAudioVolume(volumeSlider->getPercent() / 100.f);
 		}
-		else if (type == CheckBox::EventType::UNSELECTED)	
+		else if (type == ui::CheckBox::EventType::UNSELECTED)	
 			AudioManager::getInstance().stopBackgroundAudio();
 	});
 
@@ -69,9 +69,9 @@ void SettingsScene::drawMusicVolumeSlider()
 
 	volumeSlider = UImanager::createSlider(Vec2(bgSoundCB->getPosition().x, sliderLabel->getPosition().y),
 		Director::getInstance()->getWinSize().height / 600);
-	volumeSlider->addEventListener([&](Ref* sender, Slider::EventType type) 
+	volumeSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) 
 	{
-		if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
+		if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED)
 			AudioManager::getInstance().setBackgroundAudioVolume((float)volumeSlider->getPercent() / 100);
 	});
 	this->addChild(sliderLabel, 1);

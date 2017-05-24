@@ -60,8 +60,13 @@ void PlayGameScene::drawBackground()
 
 void PlayGameScene::drawFigure()
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	auto cellSideSize = visibleSize.height * 8 / 9 / Settings::getInstance().getAmountOfCellsInARow() * 5 / 6;
+
+	auto scale = Director::getInstance()->getVisibleSize().height / (250 * Settings::getInstance().getAmountOfCellsInARow());
 	playableFigure = new Figure(cells.at(0).at(0)->centerCoordinate, 
-		Director::getInstance()->getVisibleSize().height / (250 * Settings::getInstance().getAmountOfCellsInARow()),
+		scale,
 		Vec2(0, 0));
 	this->addChild(playableFigure->getSprite(), 0);
 }
@@ -74,13 +79,13 @@ void PlayGameScene::drawPlayerScoreLabels()
 	player1ScoreLabel = Label::createWithTTF("Player 1 score: " + std::to_string(player1Score),
 		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
 	player1ScoreLabel->setPosition(Vec2(origin.x + player1ScoreLabel->getBoundingBox().size.width / 1.3,
-										origin.y + visibleSize.height - player1ScoreLabel->getBoundingBox().size.height * 1.5));
+										origin.y + visibleSize.height - player1ScoreLabel->getBoundingBox().size.height ));
 	player1ScoreLabel->setTextColor(ccc4(0, 255, 0, 255));
 
 	player2ScoreLabel = Label::createWithTTF("Player 2 score: " + std::to_string(player2Score),
 		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
 	player2ScoreLabel->setPosition(Vec2(origin.x + visibleSize.width - player2ScoreLabel->getBoundingBox().size.width / 1.3,
-										origin.y + visibleSize.height - player2ScoreLabel->getBoundingBox().size.height * 1.5));
+										origin.y + visibleSize.height - player2ScoreLabel->getBoundingBox().size.height ));
 	player2ScoreLabel->setTextColor(ccc4(0, 255, 0, 255));
 	this->addChild(player1ScoreLabel, 0);
 	this->addChild(player2ScoreLabel, 0);

@@ -39,13 +39,13 @@ void GameResultScene::drawPlayerResultLabels()
 	auto player1Result = Label::createWithTTF("Player 1 score: " + std::to_string(p1Score),
 		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
 	player1Result->setPosition(Vec2(origin.x + player1Result->getBoundingBox().size.width / 1.3,
-										origin.y + visibleSize.height - player1Result->getBoundingBox().size.height * 1.5));
+										origin.y + visibleSize.height - player1Result->getBoundingBox().size.height));
 	player1Result->setTextColor(ccc4(0, 255, 0, 255));
 
 	auto player2Result = Label::createWithTTF("Player 2 score: " + std::to_string(p2Score),
 		"fonts/Enchanted Land cyr-lat.ttf", visibleSize.height / 14);
 	player2Result->setPosition(Vec2(origin.x + visibleSize.width - player2Result->getBoundingBox().size.width / 1.3,
-										origin.y + visibleSize.height - player2Result->getBoundingBox().size.height * 1.5));
+										origin.y + visibleSize.height - player2Result->getBoundingBox().size.height ));
 	player2Result->setTextColor(ccc4(0, 255, 0, 255));
 	this->addChild(player1Result, 0);
 	this->addChild(player2Result, 0);

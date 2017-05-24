@@ -2,7 +2,7 @@
 #define __AUDIO_MANAGER_H__
 #include <AudioEngine.h>
 using namespace cocos2d::experimental;
-#define BACKGROUND_SOUND "Sounds/Massive Attack - Angel.mp3"
+#define BACKGROUND_SOUND "Sounds/sound.mp3"
 
 class AudioManager
 {

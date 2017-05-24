@@ -3,12 +3,11 @@
 
 #include "cocos2d.h"
 #include "MainMenuScene.h"
-#include <ui/CocosGUI.h>
+#include "Core/UImanager.h"
 #include "Core/SettingsConfRW.h"
 #include "Core/Settings.h"
 
 USING_NS_CC;
-using namespace ui;
 
 #define SETTINGS_LABEL_FONT "fonts/Enchanted Land cyr-lat.ttf"
 #define SETTINGS_BACKROUND_IMAGE "backgrounds/settings-background.jpg"
@@ -16,9 +15,9 @@ using namespace ui;
 class SettingsScene : public cocos2d::Layer
 {
 private:
-	Slider							  *volumeSlider;
-	CheckBox							 *bgSoundCB;
-	CheckBox						   *aiEnabledCB;
+	ui::Slider							  *volumeSlider;
+	ui::CheckBox							 *bgSoundCB;
+	ui::CheckBox						   *aiEnabledCB;
 public:
 	//=============================SceneCreators
 	static cocos2d::Scene* createScene();

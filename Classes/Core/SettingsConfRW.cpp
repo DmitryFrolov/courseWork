@@ -1,5 +1,5 @@
 #include "SettingsConfRW.h"
-const char* SettingsConfRW::CONFIG_PATH = "../Resources/config/settings.conf";
+const char* SettingsConfRW::CONFIG_PATH = "config/settings.conf";
 
 void SettingsConfRW::createConfig() 
 {
@@ -24,14 +24,6 @@ bool SettingsConfRW::readBGMusicPlaying()
 	return false;
 }
 
-void SettingsConfRW::writeBGMusicPlaying(bool isPlaying)
-{
-	if (isConfigExists()) {
-		std::string temp = dConf::boolToString(isPlaying);
-		dConf::setValueByKey(CONFIG_PATH, "is_background_music_playing", temp);
-	}
-}
-
 float SettingsConfRW::readBGMusicVolume()
 {
 	if (isConfigExists()) {
@@ -41,13 +33,6 @@ float SettingsConfRW::readBGMusicVolume()
 	return 1.0;
 }
 
-void SettingsConfRW::writeBGMusicVolume(float volume)
-{
-	if (isConfigExists()) {
-		dConf::setValueByKey(CONFIG_PATH, "background_music_volume", std::to_string(volume));
-	}
-}
-
 bool SettingsConfRW::readAIEnabled()
 {
 	if (isConfigExists()) {
@@ -55,6 +40,21 @@ bool SettingsConfRW::readAIEnabled()
 		return dConf::stringToBool(temp);
 	}
 	return false;
+}
+
+void SettingsConfRW::writeBGMusicPlaying(bool isPlaying)
+{
+	if (isConfigExists()) {
+		std::string temp = dConf::boolToString(isPlaying);
+		dConf::setValueByKey(CONFIG_PATH, "is_background_music_playing", temp);
+	}
+}
+
+void SettingsConfRW::writeBGMusicVolume(float volume)
+{
+	if (isConfigExists()) {
+		dConf::setValueByKey(CONFIG_PATH, "background_music_volume", std::to_string(volume));
+	}
 }
 
 void SettingsConfRW::writeAIEnabled(bool isEnabled)

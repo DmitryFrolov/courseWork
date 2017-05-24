@@ -17,10 +17,14 @@ bool LoadingFrame::init()
 	createInterface();
 	loadingBar->setPercent(75);
 
-	if (SettingsConfRW::isConfigExists())
-		applyDefaults();
-	else
+	if (!SettingsConfRW::isConfigExists()) {
 		SettingsConfRW::createConfig();
+		SettingsConfRW::writeBGMusicPlaying(Settings::getInstance().getBackgroundAudioEnabled());
+		SettingsConfRW::writeBGMusicVolume(Settings::getInstance().getBackgroundAudioVolume());
+		SettingsConfRW::writeAIEnabled(Settings::getInstance().getAIOpponentEnabled());
+	}
+	applyDefaults();
+
 
 	this->schedule([&](float dt) {
 		loadingBar->setPercent(100);

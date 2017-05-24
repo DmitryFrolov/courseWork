@@ -2,12 +2,8 @@
 #define  _APP_DELEGATE_H_
 
 #include "cocos2d.h"
+#include "Scenes/LoadingFrameScene.h"
 
-/**
-@brief    The cocos2d Application.
-
-Private inheritance here hides part of interface from Director.
-*/
 class  AppDelegate : private cocos2d::Application
 {
 public:

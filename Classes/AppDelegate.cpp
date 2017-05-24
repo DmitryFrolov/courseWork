@@ -1,5 +1,4 @@
 #include "AppDelegate.h"
-#include "Scenes/LoadingFrameScene.h"
 
 USING_NS_CC;
 static cocos2d::Size designResolutionSize = cocos2d::Size(1920, 1080);
@@ -15,8 +14,6 @@ AppDelegate::~AppDelegate()
 {
 }
 
-// if you want a different context, modify the value of glContextAttrs
-// it will affect all platforms
 void AppDelegate::initGLContextAttrs()
 {
 	// set OpenGL context attributes: red,green,blue,alpha,depth,stencil
@@ -24,21 +21,15 @@ void AppDelegate::initGLContextAttrs()
 	GLView::setGLContextAttrs(glContextAttrs);
 }
 
-// if you want to use the package manager to install more packages,  
-// don't modify or remove this function
-static int register_all_packages()
+bool AppDelegate::applicationDidFinishLaunching() 
 {
-	return 0; //flag for packages manager
-}
-
-bool AppDelegate::applicationDidFinishLaunching() {
 	// initialize director
 	auto director = Director::getInstance();
 	auto glview = director->getOpenGLView();
 	if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		//glview = GLViewImpl::createWithRect("Lucky Horse", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
-		glview = GLViewImpl::createWithFullScreen("Lucky Horse");
+		glview = GLViewImpl::createWithRect("Lucky Horse", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+		//glview = GLViewImpl::createWithFullScreen("Lucky Horse");
 #else
 		glview = GLViewImpl::create("Lucky Horse");
 #endif
@@ -66,12 +57,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	{
 		director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolutionSize.height, smallResolutionSize.width / designResolutionSize.width));
 	}
-
-	register_all_packages();
-
-	// create a scene. it's an autorelease object
+	
 	auto scene = LoadingFrame::createScene();
-	// run
 	director->runWithScene(scene);
 
 	return true;

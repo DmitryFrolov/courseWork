@@ -2,7 +2,6 @@
 #define _PAUSE_SCREEN_H_
 #include "cocos2d.h"
 #include "Classes\Core\UImanager.h"
-#include "Classes\Scenes\SettingsScene.h"
 #include "Classes\Scenes\MainMenuScene.h"
 USING_NS_CC;
 

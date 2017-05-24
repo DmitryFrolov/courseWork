@@ -5,7 +5,7 @@ Settings::Settings()
 	, backgroundAudioEnabled(false)
 	, aiOpponentEnabled(false)
 	, amountOfCellsInARow(8)
-	, cellMaxWeight(323)
+	, cellMaxWeight(300)
 {
 }
 

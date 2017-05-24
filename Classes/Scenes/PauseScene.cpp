@@ -41,10 +41,6 @@ void PauseScene::createButtons()
 		auto scene = MainMenuScene::createScene();
 		Director::getInstance()->replaceScene(scene);
 	}));
-	data->push_back(new ButtonData("Settings", [](Ref* sender) {
-		auto scene = SettingsScene::createScene();
-		Director::getInstance()->replaceScene(scene);
-	}));
 	data->push_back(new ButtonData("Exit", [](Ref* sender) {
 		AudioManager::getInstance().endAudio();
 		Director::getInstance()->end();

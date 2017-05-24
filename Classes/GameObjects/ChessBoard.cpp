@@ -7,9 +7,9 @@ ChessBoard::ChessBoard(int _cellsAmount, int _cellMaxWeight)
 	cellMaxWeight = _cellMaxWeight;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
-	BoardSideSize = visibleSize.height * 8 / 9;
+	BoardSideSize = visibleSize.height * 8 /10;
 	LeftUpperBoardPoint = Vec2(origin.x + (visibleSize.width - BoardSideSize) / 2,
-		origin.y + BoardSideSize + BoardSideSize / 16);
+		origin.y + (visibleSize.height + BoardSideSize) / 2);
 	cellSideSize = BoardSideSize / cellsAmount;
 
 	cells = std::vector<std::vector<Cell*>>(cellsAmount, std::vector<Cell*>(cellsAmount));
