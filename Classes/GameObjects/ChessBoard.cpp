@@ -38,11 +38,11 @@ void ChessBoard::create()
 			currentCell->coordinatesInTab = Vec2(columnIdx, rowIdx);
 			currentCell->centerCoordinate = leftUpperCellCenter +
 									Vec2(rowIdx * cellSideSize, -columnIdx * cellSideSize);	
-			currentCell->scoreWeight = (rowIdx == 0 && columnIdx == 0) ? 0 : getRandomWeight();	//initial figure position cell weight = 0
+			currentCell->scoreWeight = (rowIdx == 0 && columnIdx == 0) ? 0 : getRandomWeight();	
 			auto tmp = currentCell->scoreWeight;
 			currentCell->scoreLabel = createScoreLabel(		currentCell->scoreWeight,
 															currentCell->centerCoordinate);
-			currentCell->color = (rowIdx + columnIdx) % 2 == 0 ? white : black;					//set node color	
+			currentCell->color = (rowIdx + columnIdx) % 2 == 0 ? white : black;					
 			currentCell->cellNode = ChessBoard::createRect(	currentCell->centerCoordinate,
 															currentCell->color,																
 															BoardSideSize / cellsAmount);
@@ -54,7 +54,8 @@ void ChessBoard::create()
 
 Label* ChessBoard::createScoreLabel(int score, Vec2 position) 
 {
-	Label *label = Label::createWithTTF(std::to_string(score), "fonts/Enchanted Land cyr-lat.ttf", 3.0 / 4 * cellSideSize);
+	Label *label = Label::createWithTTF(std::to_string(score), 
+		"fonts/Enchanted Land cyr-lat.ttf", 3.0 / 4 * cellSideSize);
 	label->setPosition(position);
 	label->setTextColor(ccc4(0, 255, 0, 255));
 	return label;

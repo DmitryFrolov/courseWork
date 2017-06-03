@@ -11,12 +11,12 @@ private:
 	Sprite* figure;
 	Vec2 origin;
 	Size visibleSize;
-
+	
 	bool figureReleased;
 	Vec2 figureOnBoard;
 public:
 	Figure(Vec2 _initialPosition, float scale, Vec2B _initOnBoard);
-
+	~Figure() { delete figure; }
 	Sprite* getSprite();
 	bool isTargetCoordsValid(Vec2B targetCoordinate, Vec2B figurePositionOnBoard);
 	bool getFigureReleased();

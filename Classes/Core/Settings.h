@@ -15,10 +15,11 @@ private:
 	
 	Settings();
 	~Settings() {}
-public:
-	static Settings& getInstance();
+
 	Settings(Settings const&) = delete;
 	Settings& operator= (Settings const&) = delete;
+public:
+	static Settings& getInstance();
 
 	void setBackgroundAudioVolumeValue(float);
 	void setBackgroundAudioEnabledState(bool);

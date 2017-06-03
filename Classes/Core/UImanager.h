@@ -37,7 +37,8 @@ public:
 		auto winSize = Director::getInstance()->getWinSize();
 
 		auto backgroundImage = Sprite::create(pathToImage);
-		backgroundImage->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2)); 
+		backgroundImage->setPosition(Vec2(origin.x + visibleSize.width / 2, 
+			origin.y + visibleSize.height / 2)); 
 		//background position at the center of the screen
 		backgroundImage->setScaleX(winSize.width / backgroundImage->getBoundingBox().size.width);
 		backgroundImage->setScaleY(winSize.height / backgroundImage->getBoundingBox().size.height);
@@ -49,7 +50,8 @@ public:
 												const cocos2d::ccMenuCallback &callback, 
 												const Vec2 &position)
 	{
-		auto label = Label::createWithTTF(text, BUTTON_LABEL_FONT, Director::getInstance()->getVisibleSize().height / 15);
+		auto label = Label::createWithTTF(text, BUTTON_LABEL_FONT, 
+			Director::getInstance()->getVisibleSize().height / 15);
 		label->setTextColor(textColor);
 		auto button = MenuItemLabel::create(label, callback);
 		button->setPosition(position);
@@ -84,7 +86,8 @@ public:
 	static cocos2d::ui::CheckBox* createCheckBox(	const Vec2 &position, 
 													const float scale = 1)
 	{
-		auto checkBox = cocos2d::ui::CheckBox::create("CBdisabledYellow.png", "vote.png", cocos2d::ui::Widget::TextureResType::LOCAL);
+		auto checkBox = cocos2d::ui::CheckBox::create("CBdisabledYellow.png", "vote.png", 
+			cocos2d::ui::Widget::TextureResType::LOCAL);
 		checkBox->setAnchorPoint(Vec2(0, 0.5));
 		checkBox->setPosition(position);
 		checkBox->setScale(scale);
@@ -111,7 +114,8 @@ public:
 
 		Vec2 btnSpace, firstBtnPosition;
 		if (isMenuVertical) {
-			btnSpace = Vec2(0, buttons.at(0)->getContentSize().height * (1 + spaceSize)); /*default space between btns*/
+			btnSpace = Vec2(0, buttons.at(0)->getContentSize().height * (1 + spaceSize));
+			/*default space between btns*/
 			Vec2 menuSize = btnSpace * buttons.size() - btnSpace * 0.6;
 			firstBtnPosition = menuCenterPosition + menuSize / 2;
 			for (size_t it = 0; it < buttons.size(); it++)

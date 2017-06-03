@@ -16,7 +16,6 @@ bool PauseScene::init()
 	}
 	createButtons();
 	createBlacklightLayer();
-	
 	return true;
 }
 

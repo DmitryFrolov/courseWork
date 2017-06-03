@@ -8,7 +8,6 @@
 #include "PlayGameScene.h"
 
 USING_NS_CC;
-#define MAIN_MENU_LABEL_FONT "fonts/Enchanted Land cyr-lat.ttf"
 #define MAIN_MENU_BACKROUND_IMAGE "backgrounds/background2.png"
 
 class MainMenuScene : public cocos2d::Layer

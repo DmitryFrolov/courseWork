@@ -29,7 +29,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 	if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		glview = GLViewImpl::createWithRect("Lucky Horse", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
-		//glview = GLViewImpl::createWithFullScreen("Lucky Horse");
+		//glview = GLViewImpl::createWithFullScreen("Lucky Horse"); //unlock if fullscreen version
 #else
 		glview = GLViewImpl::create("Lucky Horse");
 #endif
@@ -67,15 +67,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 // This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.
 void AppDelegate::applicationDidEnterBackground() {
 	Director::getInstance()->stopAnimation();
-
-	// if you use SimpleAudioEngine, it must be paused
-	// SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
 	Director::getInstance()->startAnimation();
-
-	// if you use SimpleAudioEngine, it must resume here
-	// SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
